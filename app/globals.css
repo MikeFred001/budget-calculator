@@ -10,12 +10,12 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
   }
 }
 
 body {
-  color: var(--foreground);
+  color: rgb(150, 255, 150);
+  font-size: 20px;
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Courier New", Courier, monospace;
 }
