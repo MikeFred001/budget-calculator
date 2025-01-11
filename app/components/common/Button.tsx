@@ -1,15 +1,16 @@
-import React from "react";
-
-export default function Button({
-  label,
-  className,
-}: {
-  label: string;
-  className?: string;
-}) {
+export default function Button({ className, children, onClick }: IButtonProps) {
   return (
-    <button className={`BUTTON ${className} border border-green-300 px-4`}>
-      {label}
+    <button
+      onClick={onClick}
+      className={`BUTTON flex justify-center items-center border px-4 ${className}`}
+    >
+      {children}
     </button>
   );
+}
+
+interface IButtonProps {
+  className?: string;
+  children?: React.ReactNode;
+  onClick: () => void;
 }
