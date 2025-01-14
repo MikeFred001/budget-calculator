@@ -34,6 +34,7 @@ export default function BudgetItemList({
 }
 
 interface IBudgetItem {
+  id: number;
   name: string;
   cost: string;
   freq: string;

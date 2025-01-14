@@ -1,14 +1,11 @@
 import InputField from "./common/InputField";
 import FrequencyInput from "./FrequencyInput";
 import Button from "./common/Button";
+import useAppStore from "../store/appStore";
 import { useState, useEffect } from "react";
 
-export default function AddItemForm({
-  addItem,
-}: {
-  addItem: (item: IBudgetItem) => void;
-}) {
-  const initialFormData: IBudgetItem = {
+export default function AddItemForm() {
+  const initialFormData: IFormData = {
     name: "",
     cost: "",
     freq: "Monthly",
@@ -16,6 +13,8 @@ export default function AddItemForm({
   };
 
   const [formData, setFormData] = useState(initialFormData);
+
+  const { budgetItems, setAppState } = useAppStore();
 
   useEffect(() => {
     console.log("FORM DATA", "\n", formData);
@@ -68,6 +67,37 @@ export default function AddItemForm({
     </div>
   );
 
+  function addItem(newItem: IFormData) {
+    const entries = Object.values(newItem);
+    for (let entry of entries) {
+      if (entry === "") {
+        alert("Fill out all the fields, idiot.");
+        return;
+      }
+    }
+    const newItemWithId: IBudgetItem = {
+      ...newItem,
+      id: budgetItems.length + 1,
+    };
+    setAppState({ budgetItems: [...budgetItems, newItemWithId] });
+  }
+
+  function handleOptionClick(freq: string) {
+    setFormData((formData) => ({
+      ...formData,
+      freq,
+    }));
+  }
+
+  function handleSubmit() {
+    addItem(formData);
+    setFormData(initialFormData);
+  }
+
+  function clearForm() {
+    setFormData(initialFormData);
+  }
+
   function formatCurrency(value: string) {
     if (value === "") return "0.00";
 
@@ -104,25 +134,17 @@ export default function AddItemForm({
       [inputName]: newValue,
     }));
   }
+}
 
-  function handleOptionClick(freq: string) {
-    setFormData((formData) => ({
-      ...formData,
-      freq,
-    }));
-  }
-
-  function handleSubmit() {
-    addItem(formData);
-    setFormData(initialFormData);
-  }
-
-  function clearForm() {
-    setFormData(initialFormData);
-  }
+interface IFormData {
+  name: string;
+  cost: string;
+  freq: string;
+  startDate: string;
 }
 
 interface IBudgetItem {
+  id: number;
   name: string;
   cost: string;
   freq: string;

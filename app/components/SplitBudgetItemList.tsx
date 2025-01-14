@@ -8,7 +8,7 @@ export default function SplitBudgetItemList({
   const { BiWeekly, Monthly, Yearly } = groupBudgetItems(items);
 
   return (
-    <div className="GROUPED-BUDGET-ITEM-LIST flex flex-col gap-6">
+    <div className="GROUPED-BUDGET-ITEM-LIST flex flex-col gap-4">
       {BiWeekly.length > 0 && (
         <BudgetItemList items={BiWeekly} groupFreq={"BiWeekly"} />
       )}
