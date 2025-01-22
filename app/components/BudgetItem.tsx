@@ -1,19 +1,17 @@
 import Typography from "./common/Typography";
 import Chip from "./common/Chip";
+import CostInfo from "./common/CostInfo";
 import useAppStore from "../store/appStore";
 
 export default function BudgetItem({ item, className }: IBudgetItemProps) {
-  console.log("ITEM", item);
   const { budgetItems, setAppState } = useAppStore();
 
   return (
     <div
-      className={`BUDGET-ITEM grid grid-cols-4 items-center p-2 border ${item.freq}-outline ${className}`}
+      className={`BUDGET-ITEM grid grid-cols-4 items-center p-2 border text-[1.4rem] ${item.freq}-outline ${className}`}
     >
-      <Typography>{item.name}</Typography>
-      <Typography currency className="justify-self-end">
-        {calculateMonthly(item.cost)}
-      </Typography>
+      <Typography>{capitalize(item.name)}</Typography>
+      <CostInfo amount={calculateMonthly(item.cost)} />
       <Typography className="justify-self-end">{item.startDate}</Typography>
       <Chip
         freq={item.freq}
@@ -37,6 +35,18 @@ export default function BudgetItem({ item, className }: IBudgetItemProps) {
       return item.id !== id;
     });
     setAppState({ budgetItems: filtered });
+  }
+
+  function capitalize(string: string): string {
+    const wordsToIgnore = ["and", "or", "the", "a", "an", "but", "as"];
+
+    const words = string.split(" ");
+    const capitalizedWords = words.map((word) => {
+      if (!wordsToIgnore.includes(word)) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+    });
+    return capitalizedWords.join(" ");
   }
 }
 

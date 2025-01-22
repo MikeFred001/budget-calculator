@@ -36,6 +36,7 @@ export default function SplitBudgetItemList({
 }
 
 interface IBudgetItem {
+  id: number;
   name: string;
   cost: string;
   freq: string;

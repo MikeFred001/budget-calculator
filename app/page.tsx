@@ -9,6 +9,8 @@ import AddItemForm from "./components/AddItemForm";
 import useAppStore from "./store/appStore";
 import { useEffect } from "react";
 
+import Button from "./components/common/Button"; // Just for testing
+
 export default function Home() {
   const { budgetItems, split, monthlyIncome, setAppState } = useAppStore();
 
@@ -23,7 +25,18 @@ export default function Home() {
     <div className="HOME p-6 flex flex-col gap-4">
       <Typography className="text-[2rem] leading-none">Girl Math</Typography>
       <AddItemForm />
-      <Switch split={split} toggleSplit={toggleSplit} />
+
+      <div className="flex gap-4">
+        <Switch split={split} toggleSplit={toggleSplit} />
+        {/* Just for testing --------------------------- */}
+        <Button
+          onClick={addRandomTestItem}
+          className="border-green-300 hover:text-black hover:bg-green-300 active:bg-white active:border-white"
+        >
+          Add Test Item
+        </Button>
+        {/* Just for testing --------------------------- */}
+      </div>
       <Breakdown
         monthlyTotal={calculateMonthlyTotal(budgetItems)}
         monthlyIncome={monthlyIncome}
@@ -36,15 +49,19 @@ export default function Home() {
     </div>
   );
 
-  function addItem(newItem: IBudgetItem) {
-    const entries = Object.values(newItem);
-    for (let entry of entries) {
-      if (entry === "") {
-        alert("Fill out all the fields, idiot.");
-        return;
-      }
-    }
-    setAppState({ budgetItems: [...budgetItems, newItem] });
+  function addRandomTestItem() {
+    const frequencies = ["BiWeekly", "Monthly", "Yearly"];
+    const randomFreq = frequencies[Math.floor(Math.random() * 3)];
+    const randomCost = Math.floor(Math.random() * 1000).toFixed(2);
+
+    const randomItem: IBudgetItem = {
+      id: budgetItems.length + 1,
+      name: "Test",
+      cost: randomCost,
+      freq: randomFreq,
+      startDate: "01/01/2025",
+    };
+    setAppState({ budgetItems: [...budgetItems, randomItem] });
   }
 
   function toggleSplit(setting: boolean) {

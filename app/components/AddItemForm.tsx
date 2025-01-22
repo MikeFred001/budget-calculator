@@ -2,7 +2,7 @@ import InputField from "./common/InputField";
 import FrequencyInput from "./FrequencyInput";
 import Button from "./common/Button";
 import useAppStore from "../store/appStore";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function AddItemForm() {
   const initialFormData: IFormData = {
@@ -15,10 +15,6 @@ export default function AddItemForm() {
   const [formData, setFormData] = useState(initialFormData);
 
   const { budgetItems, setAppState } = useAppStore();
-
-  useEffect(() => {
-    console.log("FORM DATA", "\n", formData);
-  }, [formData]);
 
   return (
     <div className="ADD-ITEM-FORM flex h-12 gap-4">
@@ -51,7 +47,7 @@ export default function AddItemForm() {
         <FrequencyInput selected={formData.freq} onClick={handleOptionClick} />
         <Button
           onClick={clearForm}
-          className={`w-[52px] font-arial hover:font-bold hover:border-4 active:bg-white active:border-white ml-1 active:text-black ${formData.freq}-outline`}
+          className={`w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black ${formData.freq}-outline`}
         >
           X
         </Button>

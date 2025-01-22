@@ -9,7 +9,7 @@ export default function BudgetItemList({
     <div
       className={`BUDGET-ITEM-LIST flex flex-col border ${
         groupFreq ? `${groupFreq}-outline` : "Default-outline"
-      }`}
+      } ${items.length < 1 ? "hidden" : ""}`}
     >
       {groupFreq && (
         <div

@@ -1,12 +1,12 @@
 import Typography from "./common/Typography";
-import BreakdownCell from "./common/BreakdownCell";
+import BreakdownCell from "./BreakdownCell";
 import { useState } from "react";
 
 export default function Breakdown({
   monthlyTotal,
   monthlyIncome,
 }: IBreakdownProps) {
-  const monthlyRemaining = (
+  const monthlyRemaining: string = (
     Number(monthlyIncome) - Number(monthlyTotal)
   ).toFixed(2);
 
@@ -26,7 +26,7 @@ export default function Breakdown({
       <div
         className={`grid grid-cols-3 text-center border-2 border-green-300 ${
           collapsed ? "hidden" : ""
-        }`}
+        } ${Number(monthlyRemaining) < 0 ? "text-red-600" : ""}`}
       >
         <BreakdownCell
           title="Income"
