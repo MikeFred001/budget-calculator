@@ -8,7 +8,11 @@ export default function BudgetItem({ item, className }: IBudgetItemProps) {
 
   return (
     <div
-      className={`BUDGET-ITEM grid grid-cols-4 items-center p-2 border text-[1.4rem] ${item.freq}-outline ${className}`}
+      className={`
+        BUDGET-ITEM grid grid-cols-4 items-center p-2 border text-[1.4rem]
+        ${item.freq}-outline
+        ${className}
+      `}
     >
       <Typography>{capitalize(item.name)}</Typography>
       <CostInfo amount={calculateMonthly(item.cost)} />
@@ -38,12 +42,29 @@ export default function BudgetItem({ item, className }: IBudgetItemProps) {
   }
 
   function capitalize(string: string): string {
-    const wordsToIgnore = ["and", "or", "the", "a", "an", "but", "as"];
+    const wordsToIgnore = [
+      "a",
+      "an",
+      "as",
+      "at",
+      "and",
+      "by",
+      "but",
+      "or",
+      "the",
+      "of",
+      "for",
+      "on",
+      "to",
+    ];
 
     const words = string.split(" ");
-    const capitalizedWords = words.map((word) => {
-      if (!wordsToIgnore.includes(word)) {
+
+    const capitalizedWords = words.map((word, i) => {
+      if (i === 0 || !wordsToIgnore.includes(word)) {
         return word.charAt(0).toUpperCase() + word.slice(1);
+      } else {
+        return word;
       }
     });
     return capitalizedWords.join(" ");
