@@ -1,6 +1,8 @@
 import Typography from "./common/Typography";
-import Chip from "./common/Chip";
 import CostInfo from "./common/CostInfo";
+import DateInfo from "./common/DateInfo";
+import Chip from "./common/Chip";
+
 import useAppStore from "../store/appStore";
 
 export default function BudgetItem({ item, className }: IBudgetItemProps) {
@@ -16,7 +18,7 @@ export default function BudgetItem({ item, className }: IBudgetItemProps) {
     >
       <Typography>{capitalize(item.name)}</Typography>
       <CostInfo amount={calculateMonthly(item.cost)} />
-      <Typography className="justify-self-end">{item.startDate}</Typography>
+      <DateInfo startDate={item.startDate} />
       <Chip
         freq={item.freq}
         cost={item.cost}
