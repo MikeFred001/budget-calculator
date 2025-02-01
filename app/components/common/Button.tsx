@@ -12,5 +12,5 @@ export default function Button({ className, children, onClick }: IButtonProps) {
 interface IButtonProps {
   className?: string;
   children?: React.ReactNode;
-  onClick: () => void;
+  onClick: (e) => void;
 }

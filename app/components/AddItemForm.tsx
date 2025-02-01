@@ -74,6 +74,8 @@ export default function AddItemForm() {
     const newItemWithId: IBudgetItem = {
       ...newItem,
       id: budgetItems.length + 1,
+      cost: Number(newItem.cost),
+      startDate: convertToUtcISO(newItem.startDate),
     };
     setAppState({ budgetItems: [...budgetItems, newItemWithId] });
   }
@@ -104,7 +106,7 @@ export default function AddItemForm() {
     return `${Number(dollars)}.${cents}`;
   }
 
-  function formatDate(value: string) {
+  function formatDateInput(value: string) {
     let newValue = value.replace(/\D/g, "");
 
     if (newValue.length >= 5) {
@@ -123,12 +125,17 @@ export default function AddItemForm() {
     let newValue = value;
 
     if (inputName === "cost") newValue = formatCurrency(value);
-    if (inputName === "startDate") newValue = formatDate(value);
+    if (inputName === "startDate") newValue = formatDateInput(value);
 
     setFormData((formData) => ({
       ...formData,
       [inputName]: newValue,
     }));
+  }
+
+  function convertToUtcISO(date: string): string {
+    const [month, day, year] = date.split("/");
+    return `${year}-${month}-${day}T12:00:00.000Z`;
   }
 }
 
@@ -142,7 +149,7 @@ interface IFormData {
 interface IBudgetItem {
   id: number;
   name: string;
-  cost: string;
+  cost: number;
   freq: string;
   startDate: string;
 }

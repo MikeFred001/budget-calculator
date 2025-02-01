@@ -1,17 +1,19 @@
 import Typography from "./common/Typography";
 import BreakdownCell from "./BreakdownCell";
+import EditIncomeForm from "./EditIncomeForm";
 import { useState } from "react";
+
+import useAppStore from "../store/appStore";
 
 export default function Breakdown({
   monthlyTotal,
   monthlyIncome,
 }: IBreakdownProps) {
-  const monthlyRemaining: string = (
-    Number(monthlyIncome) - Number(monthlyTotal)
-  ).toFixed(2);
+  const monthlyRemaining: number = monthlyIncome - monthlyTotal;
+  const { editingIncome } = useAppStore();
 
   const [collapsed, setCollapsed] = useState(false);
-  const [headerText, setHeaderText] = useState("Breakdown");
+  const [headerText, setHeaderText] = useState("Monthly Breakdown");
 
   return (
     <div className="BREAKDOWN flex-flex-col">
@@ -19,20 +21,25 @@ export default function Breakdown({
         className={`px-2 bg-green-300 hover:bg-green-500 cursor-pointer`}
         onClick={handleHeaderClick}
         onMouseEnter={handleHeaderHover}
-        onMouseLeave={() => setHeaderText("Breakdown")}
+        onMouseLeave={() => setHeaderText("Monthly Breakdown")}
       >
         <Typography className="text-black font-bold">{headerText}</Typography>
       </div>
       <div
         className={`grid grid-cols-3 text-center border-2 border-green-300 ${
           collapsed ? "hidden" : ""
-        } ${Number(monthlyRemaining) < 0 ? "text-red-600" : ""}`}
+        } ${monthlyRemaining < 0 ? "text-red-600" : ""}`}
       >
-        <BreakdownCell
-          title="Income"
-          amount={monthlyIncome}
-          className="border-r"
-        />
+        {editingIncome ? (
+          <EditIncomeForm initialAmount={monthlyIncome.toFixed(2)} />
+        ) : (
+          <BreakdownCell
+            title="Income"
+            amount={monthlyIncome}
+            className="border-r"
+            editable
+          />
+        )}
         <BreakdownCell
           title="Total"
           amount={monthlyTotal}
@@ -62,6 +69,6 @@ export default function Breakdown({
 }
 
 interface IBreakdownProps {
-  monthlyTotal: string;
-  monthlyIncome: string;
+  monthlyTotal: number;
+  monthlyIncome: number;
 }

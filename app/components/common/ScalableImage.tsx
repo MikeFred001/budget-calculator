@@ -1,10 +1,10 @@
 export default function ScalableImage({
+  src,
   className = "",
   containerClassName = "",
-  src,
-  alt = "",
   width,
   height,
+  alt = "",
   ...props
 }: IScalableImageProps) {
   return (
@@ -27,11 +27,11 @@ export default function ScalableImage({
 }
 
 interface IScalableImageProps {
+  src: string;
   className?: string;
   containerClassName?: string;
-  isLoading?: boolean;
-  src: string;
   width?: number;
   height?: number;
   alt?: string;
+  isLoading?: boolean;
 }

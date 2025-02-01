@@ -1,29 +1,34 @@
 "use client";
 
+import Header from "./components/Header";
 import Switch from "./components/Switch";
-import Typography from "./components/common/Typography";
+import Button from "./components/common/Button";
 import Breakdown from "./components/Breakdown";
+import AddItemForm from "./components/AddItemForm";
 import BudgetItemList from "./components/BudgetItemList";
 import SplitBudgetItemList from "./components/SplitBudgetItemList";
-import AddItemForm from "./components/AddItemForm";
-import useAppStore from "./store/appStore";
+import { sortByFullDate } from "@/utils/helpers";
 import { useEffect } from "react";
 
-import Button from "./components/common/Button"; // Just for testing
+import useAppStore from "./store/appStore";
 
 export default function Home() {
   const { budgetItems, split, monthlyIncome, setAppState } = useAppStore();
 
   useEffect(() => {
     setAppState({
-      budgetItems: exBudgetItems,
-      monthlyIncome: "2500.00",
+      budgetItems: sortByDay(budgetItems),
+      monthlyIncome: 2500,
     });
-  }, [setAppState]);
+  }, [setAppState, budgetItems]);
+
+  useEffect(() => {
+    getNearestPaymentDate();
+  }, [budgetItems]);
 
   return (
     <div className="HOME p-6 flex flex-col gap-4">
-      <Typography className="text-[2rem] leading-none">Girl Math</Typography>
+      <Header />
       <AddItemForm />
 
       <div className="flex gap-4">
@@ -49,18 +54,19 @@ export default function Home() {
     </div>
   );
 
-  function addRandomTestItem() {
+  function addRandomTestItem(): void {
     const frequencies = ["BiWeekly", "Monthly", "Yearly"];
     const randomFreq = frequencies[Math.floor(Math.random() * 3)];
-    const randomCost = Math.floor(Math.random() * 1000).toFixed(2);
+    const randomCost = Math.floor(Math.random() * 1000);
 
     const randomItem: IBudgetItem = {
       id: budgetItems.length + 1,
       name: "Test",
       cost: randomCost,
       freq: randomFreq,
-      startDate: "01/01/2025",
+      startDate: "2025-01-01T12:00:00.000Z",
     };
+
     setAppState({ budgetItems: [...budgetItems, randomItem] });
   }
 
@@ -68,13 +74,13 @@ export default function Home() {
     setAppState({ split: setting });
   }
 
-  function calculateMonthlyTotal(budgetItems: IBudgetItem[]): string {
+  function calculateMonthlyTotal(budgetItems: IBudgetItem[]): number {
     const freqMapping = { BiWeekly: 0.5, Monthly: 1, Yearly: 12 };
 
     let monthlyTotalInCents: number = 0;
 
     for (let item of budgetItems) {
-      const costInCents = Math.round(Number(item.cost) * 100);
+      const costInCents = Math.round(item.cost * 100);
       const monthlyCostInCents = Math.round(
         costInCents / freqMapping[item.freq]
       );
@@ -82,58 +88,30 @@ export default function Home() {
       monthlyTotalInCents += Math.ceil(monthlyCostInCents);
     }
 
-    return (monthlyTotalInCents / 100).toFixed(2);
+    return monthlyTotalInCents / 100;
+  }
+
+  function sortByDay(items: IBudgetItem[]): IBudgetItem[] {
+    const sorted = items.sort((a, b) => {
+      const aDate = new Date(a.startDate);
+      const bDate = new Date(b.startDate);
+
+      return aDate.getDate() - bDate.getDate();
+    });
+
+    return sorted;
+  }
+
+  function getNearestPaymentDate() {
+    const nearestPaymentDate = sortByFullDate([...budgetItems])[0]?.startDate;
+    setAppState({ nearestPaymentDate });
   }
 }
 
-const exBudgetItems: IBudgetItem[] = [
-  {
-    id: 0,
-    name: "Spotify",
-    cost: "50.99",
-    freq: "Yearly",
-    startDate: "01/10/2021",
-  },
-  {
-    id: 1,
-    name: "Adobe",
-    cost: "349.99",
-    freq: "Yearly",
-    startDate: "10/01/2021",
-  },
-  {
-    id: 2,
-    name: "Netflix",
-    cost: "19.99",
-    freq: "Monthly",
-    startDate: "01/09/2021",
-  },
-  {
-    id: 3,
-    name: "Github Copilot",
-    cost: "15.00",
-    freq: "Monthly",
-    startDate: "01/09/2021",
-  },
-  {
-    id: 4,
-    name: "Hulu",
-    cost: "5.00",
-    freq: "BiWeekly",
-    startDate: "01/08/2021",
-  },
-  {
-    id: 5,
-    name: "Food",
-    cost: "200.00",
-    freq: "BiWeekly",
-    startDate: "01/08/2021",
-  },
-];
 interface IBudgetItem {
   id: number;
   name: string;
-  cost: string;
+  cost: number;
   freq: string;
   startDate: string;
 }

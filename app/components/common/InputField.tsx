@@ -3,12 +3,9 @@ export default function InputField({
   value,
   maxLength,
   className = "",
+  inputRef,
   onChange,
 }: IInputFieldProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(inputName, e.target.value);
-  };
-
   const name = parseCamelCase(inputName);
 
   return (
@@ -22,10 +19,15 @@ export default function InputField({
       name={name}
       placeholder={name}
       value={value}
+      ref={inputRef}
       maxLength={maxLength || 50}
       onChange={handleChange}
     />
   );
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    onChange(inputName, e.target.value);
+  }
 
   function parseCamelCase(str: string): string {
     return str
@@ -39,5 +41,6 @@ interface IInputFieldProps {
   value: string;
   maxLength?: number;
   className?: string;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   onChange: (inputName: string, value: string) => void;
 }

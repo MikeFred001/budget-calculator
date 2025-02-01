@@ -1,4 +1,5 @@
 import BudgetItemList from "./BudgetItemList";
+import { sortByFullDate } from "@/utils/helpers";
 
 export default function SplitBudgetItemList({
   items,
@@ -10,13 +11,16 @@ export default function SplitBudgetItemList({
   return (
     <div className="GROUPED-BUDGET-ITEM-LIST flex flex-col gap-4">
       {BiWeekly.length > 0 && (
-        <BudgetItemList items={BiWeekly} groupFreq={"BiWeekly"} />
+        <BudgetItemList
+          items={sortByFullDate(BiWeekly)}
+          groupFreq={"BiWeekly"}
+        />
       )}
       {Monthly.length > 0 && (
-        <BudgetItemList items={Monthly} groupFreq={"Monthly"} />
+        <BudgetItemList items={sortByFullDate(Monthly)} groupFreq={"Monthly"} />
       )}
       {Yearly.length > 0 && (
-        <BudgetItemList items={Yearly} groupFreq={"Yearly"} />
+        <BudgetItemList items={sortByFullDate(Yearly)} groupFreq={"Yearly"} />
       )}
     </div>
   );
@@ -38,7 +42,7 @@ export default function SplitBudgetItemList({
 interface IBudgetItem {
   id: number;
   name: string;
-  cost: string;
+  cost: number;
   freq: string;
   startDate: string;
 }

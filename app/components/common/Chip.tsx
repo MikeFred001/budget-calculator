@@ -1,6 +1,6 @@
 import Typography from "./Typography";
 
-export default function Chip({ freq, cost, onClick }: IChipProps) {
+export default function Chip({ freq, cost, className, onClick }: IChipProps) {
   const freqStyling = {
     BiWeekly: "hover:bg-blue-400",
     Monthly: "hover:bg-green-400",
@@ -9,7 +9,7 @@ export default function Chip({ freq, cost, onClick }: IChipProps) {
 
   return (
     <div
-      className={`CHIP w-[6.5rem] h-[2.8rem] flex flex-col items-center justify-center text-center py-1 border-2 justify-self-end leading-none text-[1.1rem] font-semibold cursor-pointer group active:bg-white active:border-white ${freqStyling[freq]} ${freq}-outline`}
+      className={`CHIP w-[6.5rem] h-[2.8rem] flex flex-col items-center justify-center text-center bg-black py-1 border-2 justify-self-end leading-none text-[1.1rem] font-semibold cursor-pointer group active:bg-white active:border-white ${freqStyling[freq]} ${freq}-outline ${className}`}
       onClick={onClick}
     >
       <Typography className="group-hover:hidden">{freq}</Typography>
@@ -25,6 +25,7 @@ export default function Chip({ freq, cost, onClick }: IChipProps) {
 
 interface IChipProps {
   freq: string;
-  cost: string;
+  cost: number;
+  className?: string;
   onClick?: () => void;
 }

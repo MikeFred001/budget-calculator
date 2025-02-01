@@ -21,13 +21,7 @@ export default function BudgetItemList({
         </div>
       )}
       {items.map((item, i) => (
-        <BudgetItem
-          key={i}
-          item={item}
-          className={`${i > 0 ? "border-t" : ""} ${
-            groupFreq ? `${groupFreq}-outline` : "Default-outline"
-          }`}
-        />
+        <BudgetItem key={i} item={item} className={i > 0 ? "border-t" : ""} />
       ))}
     </div>
   );
@@ -36,7 +30,7 @@ export default function BudgetItemList({
 interface IBudgetItem {
   id: number;
   name: string;
-  cost: string;
+  cost: number;
   freq: string;
   startDate: string;
 }

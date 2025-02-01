@@ -5,17 +5,21 @@ export default function Typography({
   className = "",
   onClick,
 }: TypographyProps) {
+  const formattedChildren =
+    currency && typeof children === "number"
+      ? `$${children.toFixed(2)}`
+      : children;
+
   return (
     <Tag className={className} onClick={onClick}>
-      {currency && "$"}
-      {children}
+      {formattedChildren}
     </Tag>
   );
 }
 
 type TypographyProps = {
   as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "div";
-  children: React.ReactNode;
+  children: number | React.ReactNode;
   className?: string;
   currency?: boolean;
   onClick?: () => void;
