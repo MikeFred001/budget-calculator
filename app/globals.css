@@ -44,6 +44,18 @@ body {
   @apply border-red-400 bg-red-400 text-black;
 }
 
+.BiWeekly-hover {
+  @apply hover:bg-blue-500;
+}
+
+.Monthly-hover {
+  @apply hover:bg-green-500;
+}
+
+.Yearly-hover {
+  @apply hover:bg-red-500;
+}
+
 .Default-outline {
   @apply border-green-300 text-green-300;
 }

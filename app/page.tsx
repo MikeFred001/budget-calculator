@@ -7,13 +7,15 @@ import Breakdown from "./components/Breakdown";
 import AddItemForm from "./components/AddItemForm";
 import BudgetItemList from "./components/BudgetItemList";
 import SplitBudgetItemList from "./components/SplitBudgetItemList";
+import DebtItemList from "./components/DebtItemList";
 import { sortByFullDate } from "@/utils/helpers";
 import { useEffect } from "react";
 
 import useAppStore from "./store/appStore";
 
 export default function Home() {
-  const { budgetItems, split, monthlyIncome, setAppState } = useAppStore();
+  const { budgetItems, debtItems, split, monthlyIncome, setAppState } =
+    useAppStore();
 
   useEffect(() => {
     setAppState({
@@ -51,6 +53,7 @@ export default function Home() {
       ) : (
         <BudgetItemList items={budgetItems} />
       )}
+      <DebtItemList items={debtItems} />
     </div>
   );
 

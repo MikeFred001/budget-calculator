@@ -16,9 +16,9 @@ export default function Breakdown({
   const [headerText, setHeaderText] = useState("Monthly Breakdown");
 
   return (
-    <div className="BREAKDOWN flex-flex-col">
+    <div className="BREAKDOWN flex-flex-col border Default-outline">
       <div
-        className={`px-2 bg-green-300 hover:bg-green-500 cursor-pointer`}
+        className="px-2 bg-green-300 hover:bg-green-500 cursor-pointer"
         onClick={handleHeaderClick}
         onMouseEnter={handleHeaderHover}
         onMouseLeave={() => setHeaderText("Monthly Breakdown")}

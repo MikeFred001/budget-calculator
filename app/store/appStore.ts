@@ -1,14 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface AppState {
+localStorage.removeItem("app-storage");
+interface IAppState {
   isLoggedIn: boolean;
   budgetItems: IBudgetItem[];
+  debtItems: IDebtItem[];
   monthlyIncome: number;
   split: boolean;
   editingIncome: boolean;
+  addingDebtItem: boolean;
   nearestPaymentDate?: string;
-  setAppState: (payload: Partial<AppState>) => void;
+  setAppState: (payload: Partial<IAppState>) => void;
 }
 
 interface IBudgetItem {
@@ -17,6 +20,12 @@ interface IBudgetItem {
   cost: number;
   freq: string;
   startDate: string;
+}
+
+interface IDebtItem {
+  id: number;
+  name: string;
+  amount: number;
 }
 
 const exBudgetItems: IBudgetItem[] = [
@@ -64,14 +73,34 @@ const exBudgetItems: IBudgetItem[] = [
   },
 ];
 
-const useAppStore = create<AppState>()(
+const exDebtItems: IDebtItem[] = [
+  {
+    id: 0,
+    name: "Credit Card",
+    amount: 5000.59,
+  },
+  {
+    id: 1,
+    name: "Car Loan",
+    amount: 15000.24,
+  },
+  {
+    id: 2,
+    name: "Student Loan",
+    amount: 30000.77,
+  },
+];
+
+const useAppStore = create<IAppState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       budgetItems: exBudgetItems,
+      debtItems: exDebtItems,
       monthlyIncome: 2500,
       isLoggedIn: false,
       split: false,
       editingIncome: false,
+      addingDebtItem: false,
       nextPaymentDate: "",
       setAppState: (payload) => set((state) => ({ ...state, ...payload })),
     }),

@@ -57,6 +57,35 @@ function calculateMonthly(cost: number, freq: string): number {
   return monthly;
 }
 
+function capitalize(string: string): string {
+  const wordsToIgnore = [
+    "a",
+    "an",
+    "as",
+    "at",
+    "and",
+    "by",
+    "but",
+    "or",
+    "the",
+    "of",
+    "for",
+    "on",
+    "to",
+  ];
+
+  const words = string.split(" ");
+
+  const capitalizedWords = words.map((word, i) => {
+    if (i === 0 || !wordsToIgnore.includes(word)) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    } else {
+      return word;
+    }
+  });
+  return capitalizedWords.join(" ");
+}
+
 //--INTERFACES---------------------------------------//
 
 interface IBudgetItem {
@@ -75,4 +104,5 @@ export {
   formatDateUS,
   calculateMonthly,
   sortByFullDate,
+  capitalize,
 };

@@ -1,8 +1,16 @@
-export default function Button({ className, children, onClick }: IButtonProps) {
+export default function Button({
+  className,
+  children,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+}: IButtonProps) {
   return (
     <button
       onClick={onClick}
       className={`BUTTON flex justify-center items-center border px-4 ${className}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {children}
     </button>
@@ -11,6 +19,8 @@ export default function Button({ className, children, onClick }: IButtonProps) {
 
 interface IButtonProps {
   className?: string;
-  children?: React.ReactNode;
-  onClick: (e) => void;
+  onClick?: (e) => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  children: React.ReactNode;
 }

@@ -2,7 +2,7 @@ import Typography from "./common/Typography";
 import CostInfo from "./common/CostInfo";
 import DateInfo from "./common/DateInfo";
 import Chip from "./common/Chip";
-import { calculateMonthly } from "@/utils/helpers";
+import { calculateMonthly, capitalize } from "@/utils/helpers";
 import useAppStore from "../store/appStore";
 
 export default function BudgetItem({ item, className }: IBudgetItemProps) {
@@ -50,35 +50,6 @@ export default function BudgetItem({ item, className }: IBudgetItemProps) {
       className += "Default-outline ";
     }
     return className;
-  }
-
-  function capitalize(string: string): string {
-    const wordsToIgnore = [
-      "a",
-      "an",
-      "as",
-      "at",
-      "and",
-      "by",
-      "but",
-      "or",
-      "the",
-      "of",
-      "for",
-      "on",
-      "to",
-    ];
-
-    const words = string.split(" ");
-
-    const capitalizedWords = words.map((word, i) => {
-      if (i === 0 || !wordsToIgnore.includes(word)) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      } else {
-        return word;
-      }
-    });
-    return capitalizedWords.join(" ");
   }
 }
 
