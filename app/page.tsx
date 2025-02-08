@@ -2,13 +2,13 @@
 
 import Header from "./components/Header";
 import Switch from "./components/Switch";
-import Button from "./components/common/Button";
 import Breakdown from "./components/Breakdown";
 import AddItemForm from "./components/AddItemForm";
 import BudgetItemList from "./components/BudgetItemList";
 import SplitBudgetItemList from "./components/SplitBudgetItemList";
 import DebtItemList from "./components/DebtItemList";
-import { sortByFullDate } from "@/utils/helpers";
+import GirlMathAPI from "../utils/api";
+import { sortByFullDate, toCamelCase } from "@/utils/helpers";
 import { useEffect } from "react";
 
 import useAppStore from "./store/appStore";
@@ -18,11 +18,29 @@ export default function Home() {
     useAppStore();
 
   useEffect(() => {
-    setAppState({
-      budgetItems: sortByDay(budgetItems),
-      monthlyIncome: 2500,
-    });
-  }, [setAppState, budgetItems]);
+    async function fetchInitialAppData() {
+      try {
+        const budgetItems = toCamelCase(await GirlMathAPI.getAllBudgetItems());
+        console.log("BUDGET ITEMS IN USE EFFECT:", budgetItems);
+
+        const debtItems = toCamelCase(await GirlMathAPI.getAllDebtItems());
+        console.log("DEBT ITEMS IN USE EFFECT:", debtItems);
+
+        const appSettings = toCamelCase(await GirlMathAPI.getAppSettings());
+        console.log("MONTHLY INCOME IN USE EFFECT:", appSettings);
+
+        setAppState({
+          budgetItems: sortByDay(budgetItems),
+          debtItems,
+          monthlyIncome: Number(appSettings.monthlyIncome),
+        });
+      } catch (err) {
+        console.error("Failed to fetch initial app data:", err);
+        setAppState({ budgetItems: [], debtItems: [], monthlyIncome: 0 });
+      }
+    }
+    fetchInitialAppData();
+  }, []);
 
   useEffect(() => {
     getNearestPaymentDate();
@@ -32,18 +50,7 @@ export default function Home() {
     <div className="HOME p-6 flex flex-col gap-4">
       <Header />
       <AddItemForm />
-
-      <div className="flex gap-4">
-        <Switch split={split} toggleSplit={toggleSplit} />
-        {/* Just for testing --------------------------- */}
-        <Button
-          onClick={addRandomTestItem}
-          className="border-green-300 hover:text-black hover:bg-green-300 active:bg-white active:border-white"
-        >
-          Add Test Item
-        </Button>
-        {/* Just for testing --------------------------- */}
-      </div>
+      <Switch split={split} toggleSplit={toggleSplit} />
       <Breakdown
         monthlyTotal={calculateMonthlyTotal(budgetItems)}
         monthlyIncome={monthlyIncome}
@@ -56,22 +63,6 @@ export default function Home() {
       <DebtItemList items={debtItems} />
     </div>
   );
-
-  function addRandomTestItem(): void {
-    const frequencies = ["BiWeekly", "Monthly", "Yearly"];
-    const randomFreq = frequencies[Math.floor(Math.random() * 3)];
-    const randomCost = Math.floor(Math.random() * 1000);
-
-    const randomItem: IBudgetItem = {
-      id: budgetItems.length + 1,
-      name: "Test",
-      cost: randomCost,
-      freq: randomFreq,
-      startDate: "2025-01-01T12:00:00.000Z",
-    };
-
-    setAppState({ budgetItems: [...budgetItems, randomItem] });
-  }
 
   function toggleSplit(setting: boolean) {
     setAppState({ split: setting });

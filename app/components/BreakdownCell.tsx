@@ -9,6 +9,7 @@ export default function BreakdownCell({
   editable = false,
   className = "",
 }: IBreakdownCellProps) {
+  console.log("TYPE OF AMOUNT:", typeof amount);
   const [hover, setHover] = useState(false);
   const { setAppState } = useAppStore();
 

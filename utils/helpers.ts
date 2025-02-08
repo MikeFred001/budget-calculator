@@ -1,5 +1,19 @@
 import { addMonths, isAfter, lastDayOfMonth, parseISO } from "date-fns";
 
+function toCamelCase(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(toCamelCase); // Recursively convert array items
+  } else if (obj !== null && typeof obj === "object") {
+    return Object.fromEntries(
+      Object.entries(obj).map(([key, value]) => [
+        key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()), // Convert snake_case to camelCase
+        toCamelCase(value), // Recursively convert nested objects
+      ])
+    );
+  }
+  return obj;
+}
+
 function getNextPaymentDate(startDate: string): Date {
   let paymentDate = parseISO(startDate);
   const today = new Date().toISOString();
@@ -105,4 +119,5 @@ export {
   calculateMonthly,
   sortByFullDate,
   capitalize,
+  toCamelCase,
 };

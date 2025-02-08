@@ -8,6 +8,9 @@ import useAppStore from "../store/appStore";
 export default function BudgetItem({ item, className }: IBudgetItemProps) {
   const { budgetItems, nearestPaymentDate, split, setAppState } = useAppStore();
 
+  console.log("BUDGET ITEM:", item);
+  console.log(typeof item.id, typeof item.cost);
+
   const highlight =
     nearestPaymentDate &&
     item.startDate.slice(8, 10) === nearestPaymentDate.slice(8, 10);
