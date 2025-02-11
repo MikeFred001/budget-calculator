@@ -6,14 +6,17 @@ export default function BudgetItemList({
   items,
   groupFreq,
 }: IBudgetItemListProps) {
+  const defaultHeaderText = groupFreq ? groupFreq : "Monthly Payments";
+
   const [collapsed, setCollapsed] = useState(false);
-  const [headerText, setHeaderText] = useState("Monthly Payments");
+  const [headerText, setHeaderText] = useState(defaultHeaderText);
 
   return (
     <div
-      className={`BUDGET-ITEM-LIST flex flex-col border ${
-        groupFreq ? `${groupFreq}-outline` : "Default-outline"
-      } ${items.length < 1 ? "hidden" : ""}`}
+      className={`BUDGET-ITEM-LIST flex flex-col border
+        ${groupFreq ? `${groupFreq}-outline` : "Default-outline"}
+        ${items.length < 1 ? "hidden" : ""}
+      `}
     >
       <div
         className={`
@@ -22,11 +25,9 @@ export default function BudgetItemList({
         `}
         onClick={handleHeaderClick}
         onMouseEnter={handleHeaderHover}
-        onMouseLeave={() => setHeaderText("Monthly Payments")}
+        onMouseLeave={() => setHeaderText(defaultHeaderText)}
       >
-        <Typography className="text-black font-bold">
-          {groupFreq ? groupFreq : headerText}
-        </Typography>
+        <Typography className="text-black font-bold">{headerText}</Typography>
       </div>
       <div className={collapsed ? "hidden" : ""}>
         {items.map((item, i) => (

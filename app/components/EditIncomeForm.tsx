@@ -7,6 +7,7 @@ import {
   faArrowAltCircleLeft,
 } from "@fortawesome/free-regular-svg-icons";
 import { useState, useEffect, useRef } from "react";
+import GirlMathAPI from "@/utils/api";
 import useAppStore from "../store/appStore";
 
 export default function EditIncomeForm({
@@ -25,7 +26,10 @@ export default function EditIncomeForm({
   }, [editingIncome]);
 
   return (
-    <form className="EDIT-INCOME-FORM relative flex items-center justify-center border-r border-green-300">
+    <form
+      className="EDIT-INCOME-FORM relative flex items-center justify-center border-r border-green-300"
+      onSubmit={handleSubmit}
+    >
       <div className="flex gap-[1px] h-[55px]">
         <Typography className="absolute left-1 top-1 font-semibold text-[.9rem] leading-none">
           Income
@@ -67,9 +71,11 @@ export default function EditIncomeForm({
     setIncome(formatCurrency(value));
   }
 
-  function handleSubmit(e: React.FormEvent): void {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setAppState({ monthlyIncome: Number(income), editingIncome: false });
+    const updatedIncome = await GirlMathAPI.updateMonthlyIncome(Number(income));
+    console.log("Updated income:", updatedIncome);
+    setAppState({ monthlyIncome: updatedIncome, editingIncome: false });
   }
 }
 

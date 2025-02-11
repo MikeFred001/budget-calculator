@@ -5,8 +5,9 @@ import {
   faFloppyDisk,
   faArrowAltCircleLeft,
 } from "@fortawesome/free-regular-svg-icons";
-import useAppStore from "../store/appStore";
+import GirlMathAPI from "@/utils/api";
 import { useState, useEffect, useRef } from "react";
+import useAppStore from "../store/appStore";
 
 export default function EditDebtItemForm({
   item,
@@ -29,7 +30,10 @@ export default function EditDebtItemForm({
   }, []);
 
   return (
-    <form className="EDIT-DEBT-ITEM-FORM flex items-center h-[60px] gap-[1px]">
+    <form
+      className="EDIT-DEBT-ITEM-FORM flex items-center h-[60px] gap-[1px]"
+      onSubmit={handleSubmit}
+    >
       <div className="flex flex-grow h-[90%] px-1">
         <InputField
           inputName="name"
@@ -44,8 +48,8 @@ export default function EditDebtItemForm({
           onChange={handleChange}
         />
         <Button
-          onClick={handleSubmit}
           className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
+          type="submit"
         >
           <FontAwesomeIcon icon={faFloppyDisk} />
         </Button>
@@ -59,28 +63,32 @@ export default function EditDebtItemForm({
     </form>
   );
 
-  function editDebtItem(newItem: IFormData) {
-    const entries = Object.values(newItem);
-
+  async function editDebtItem(formData: IFormData) {
+    const entries = Object.values(formData);
     for (let entry of entries) {
       if (entry === "") {
         alert("Fill out all the fields, idiot.");
         return;
       }
     }
+    try {
+      const updatedDebtItem = await GirlMathAPI.updateDebtItem(item.id, {
+        name: formData.name,
+        amount: Number(formData.amount),
+      });
 
-    const newDebtItems = debtItems.map((dItem) =>
-      dItem.id === item.id
-        ? { ...dItem, ...newItem, amount: Number(newItem.amount) }
-        : dItem
-    );
-
-    setAppState({ debtItems: newDebtItems });
+      const newDebtItems = debtItems.map((item) =>
+        item.id === updatedDebtItem.id ? updatedDebtItem : item
+      );
+      setAppState({ debtItems: newDebtItems });
+    } catch (err) {
+      console.error("Failed to edit debt item:", err);
+    }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    editDebtItem(formData);
+    await editDebtItem(formData);
     setFormData(initialFormData);
     setEditingDebtItem(false);
   }

@@ -5,6 +5,7 @@ import { capitalize } from "@/utils/helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
+import GirlMathAPI from "@/utils/api";
 import useAppStore from "../store/appStore";
 
 export default function DebtItem({ item, className }: IDebtItemProps) {
@@ -14,13 +15,15 @@ export default function DebtItem({ item, className }: IDebtItemProps) {
   return !editingDebtItem ? (
     <div
       className={`
-      DEBT-ITEM grid grid-cols-3 items-center p-2 border Default-outline text-[1.4rem] ${className}
+      DEBT-ITEM flex items-center p-2 border Default-outline text-[1.4rem] ${className}
     `}
     >
-      <Typography>{capitalize(item.name)}</Typography>
-      <Typography currency className="text-right">
-        {item.amount}
-      </Typography>
+      <div className="flex justify-between items-center flex-grow pr-6">
+        <Typography>{capitalize(item.name)}</Typography>
+        <Typography currency className="text-right">
+          {item.amount}
+        </Typography>
+      </div>
       <div className="flex justify-self-end">
         <Button
           className={`size-[45px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
@@ -40,11 +43,16 @@ export default function DebtItem({ item, className }: IDebtItemProps) {
     <EditDebtItemForm item={item} setEditingDebtItem={setEditingDebtItem} />
   );
 
-  function deleteItem(): void {
-    const filtered: IDebtItem[] = debtItems.filter((dItem) => {
-      return dItem.id !== item.id;
-    });
-    setAppState({ debtItems: filtered });
+  async function deleteItem(): Promise<void> {
+    try {
+      const filtered: IDebtItem[] = debtItems.filter(
+        (dItem) => dItem.id !== item.id
+      );
+      await GirlMathAPI.deleteDebtItem(item.id);
+      setAppState({ debtItems: filtered });
+    } catch (err) {
+      console.error("Failed to delete debt item:", err);
+    }
   }
 }
 

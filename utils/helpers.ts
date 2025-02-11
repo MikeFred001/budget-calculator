@@ -14,6 +14,17 @@ function toCamelCase(obj: any): any {
   return obj;
 }
 
+function sortByDay(items: IBudgetItem[]): IBudgetItem[] {
+  const sorted = items.sort((a, b) => {
+    const aDate = new Date(a.startDate);
+    const bDate = new Date(b.startDate);
+
+    return aDate.getDate() - bDate.getDate();
+  });
+
+  return sorted;
+}
+
 function getNextPaymentDate(startDate: string): Date {
   let paymentDate = parseISO(startDate);
   const today = new Date().toISOString();
@@ -120,4 +131,5 @@ export {
   sortByFullDate,
   capitalize,
   toCamelCase,
+  sortByDay,
 };

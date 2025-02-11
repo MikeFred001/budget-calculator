@@ -4,6 +4,7 @@ import useAppStore from "../store/appStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
 import { useState, useEffect, useRef } from "react";
+import GirlMathAPI from "@/utils/api";
 
 export default function AddDebtItemForm() {
   const initialFormData = {
@@ -21,7 +22,10 @@ export default function AddDebtItemForm() {
   }, []);
 
   return (
-    <form className="ADD-DEBT-ITEM-FORM flex items-center h-[60px] gap-[1px]">
+    <form
+      className="ADD-DEBT-ITEM-FORM flex items-center h-[60px] gap-[1px]"
+      onSubmit={handleSubmit}
+    >
       <div className="flex flex-grow h-[90%] px-1">
         <InputField
           inputName="name"
@@ -36,8 +40,8 @@ export default function AddDebtItemForm() {
           onChange={handleChange}
         />
         <Button
-          onClick={handleSubmit}
           className={`w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline text-[2rem]`}
+          type="submit"
         >
           +
         </Button>
@@ -51,28 +55,29 @@ export default function AddDebtItemForm() {
     </form>
   );
 
-  function addDebtItem(newItem: IFormData) {
+  async function addDebtItem(newItem: IFormData) {
     const entries = Object.values(newItem);
-
     for (let entry of entries) {
       if (entry === "") {
         alert("Fill out all the fields, idiot.");
         return;
       }
     }
-
-    const newItemWithId: IDebtItem = {
-      ...newItem,
-      id: debtItems.length + 1,
-      amount: Number(newItem.amount),
-    };
-
-    setAppState({ debtItems: [newItemWithId, ...debtItems] });
+    try {
+      const newItemFormatted = {
+        ...newItem,
+        amount: Number(newItem.amount),
+      };
+      const addedDebtItem = await GirlMathAPI.addDebtItem(newItemFormatted);
+      setAppState({ debtItems: [addedDebtItem, ...debtItems] });
+    } catch (err) {
+      console.error("Failed to add debt item:", err);
+    }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    addDebtItem(formData);
+    await addDebtItem(formData);
     setFormData(initialFormData);
     if (inputRef.current) inputRef.current.focus();
   }
@@ -105,7 +110,6 @@ interface IFormData {
 }
 
 interface IDebtItem {
-  id: number;
   name: string;
   amount: number;
 }

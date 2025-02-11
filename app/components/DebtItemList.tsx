@@ -36,10 +36,20 @@ export default function DebtItemList({ items }: IDebtItemListProps) {
             <DebtItem key={i} item={item} />
           ))}
         </div>
-        <div className="flex flex-col items-center justify-center leading-none text-[2rem] px-10 border Default-outline">
-          <Typography>Total</Typography>
-          <Typography currency>{calculateDebtTotal(items)}</Typography>
-        </div>
+        {items.length > 1 && (
+          <div className="flex flex-col items-center justify-center leading-none px-10 border Default-outline">
+            <Typography
+              className={
+                items.length < 0 ? "text-[2rem] leading-tight" : "text-[1.2rem]"
+              }
+            >
+              Total
+            </Typography>
+            <Typography className="text-[2rem]" currency>
+              {calculateDebtTotal(items)}
+            </Typography>
+          </div>
+        )}
       </div>
     </div>
   );

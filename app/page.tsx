@@ -4,39 +4,41 @@ import Header from "./components/Header";
 import Switch from "./components/Switch";
 import Breakdown from "./components/Breakdown";
 import AddItemForm from "./components/AddItemForm";
+import Typography from "./components/common/Typography";
 import BudgetItemList from "./components/BudgetItemList";
 import SplitBudgetItemList from "./components/SplitBudgetItemList";
 import DebtItemList from "./components/DebtItemList";
-import GirlMathAPI from "../utils/api";
-import { sortByFullDate, toCamelCase } from "@/utils/helpers";
+import GirlMathAPI from "@/utils/api";
+import { sortByFullDate, toCamelCase, sortByDay } from "@/utils/helpers";
 import { useEffect } from "react";
-
 import useAppStore from "./store/appStore";
 
 export default function Home() {
-  const { budgetItems, debtItems, split, monthlyIncome, setAppState } =
+  const { budgetItems, debtItems, monthlyIncome, split, loading, setAppState } =
     useAppStore();
 
   useEffect(() => {
     async function fetchInitialAppData() {
+      setAppState({ loading: true });
       try {
         const budgetItems = toCamelCase(await GirlMathAPI.getAllBudgetItems());
-        console.log("BUDGET ITEMS IN USE EFFECT:", budgetItems);
-
         const debtItems = toCamelCase(await GirlMathAPI.getAllDebtItems());
-        console.log("DEBT ITEMS IN USE EFFECT:", debtItems);
-
         const appSettings = toCamelCase(await GirlMathAPI.getAppSettings());
-        console.log("MONTHLY INCOME IN USE EFFECT:", appSettings);
 
         setAppState({
           budgetItems: sortByDay(budgetItems),
           debtItems,
           monthlyIncome: Number(appSettings.monthlyIncome),
+          loading: false,
         });
       } catch (err) {
         console.error("Failed to fetch initial app data:", err);
-        setAppState({ budgetItems: [], debtItems: [], monthlyIncome: 0 });
+        setAppState({
+          budgetItems: [],
+          debtItems: [],
+          monthlyIncome: 0,
+          loading: false,
+        });
       }
     }
     fetchInitialAppData();
@@ -46,7 +48,9 @@ export default function Home() {
     getNearestPaymentDate();
   }, [budgetItems]);
 
-  return (
+  return loading ? (
+    <Typography>The matrix has you, Neo.</Typography>
+  ) : (
     <div className="HOME p-6 flex flex-col gap-4">
       <Header />
       <AddItemForm />
@@ -83,17 +87,6 @@ export default function Home() {
     }
 
     return monthlyTotalInCents / 100;
-  }
-
-  function sortByDay(items: IBudgetItem[]): IBudgetItem[] {
-    const sorted = items.sort((a, b) => {
-      const aDate = new Date(a.startDate);
-      const bDate = new Date(b.startDate);
-
-      return aDate.getDate() - bDate.getDate();
-    });
-
-    return sorted;
   }
 
   function getNearestPaymentDate() {

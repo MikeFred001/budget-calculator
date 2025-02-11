@@ -2,6 +2,8 @@ import InputField from "./common/InputField";
 import FrequencyInput from "./FrequencyInput";
 import Button from "./common/Button";
 import useAppStore from "../store/appStore";
+import GirlMathAPI from "@/utils/api";
+import { sortByDay, toCamelCase } from "@/utils/helpers";
 import { useState } from "react";
 
 export default function AddItemForm() {
@@ -17,7 +19,7 @@ export default function AddItemForm() {
   const { budgetItems, setAppState } = useAppStore();
 
   return (
-    <div className="ADD-ITEM-FORM flex h-12 gap-4">
+    <form className="ADD-ITEM-FORM flex h-12 gap-4" onSubmit={handleSubmit}>
       <div className="flex flex-grow">
         <InputField
           inputName="name"
@@ -53,31 +55,43 @@ export default function AddItemForm() {
         </Button>
       </div>
       <Button
-        onClick={handleSubmit}
         className={`active:bg-white active:border-white hover:font-bold
           ${formData.freq ? `${formData.freq}-filled` : "Default-outline"}
         `}
+        type="submit"
       >
         Add Item
       </Button>
-    </div>
+    </form>
   );
 
-  function addItem(newItem: IFormData) {
-    const entries = Object.values(newItem);
+  async function addItem(formData: IFormData) {
+    const entries = Object.values(formData);
     for (let entry of entries) {
       if (entry === "") {
         alert("Fill out all the fields, idiot.");
         return;
       }
     }
-    const newItemWithId: IBudgetItem = {
-      ...newItem,
-      id: budgetItems.length + 1,
-      cost: Number(newItem.cost),
-      startDate: convertToUtcISO(newItem.startDate),
-    };
-    setAppState({ budgetItems: [...budgetItems, newItemWithId] });
+    try {
+      const newItem = {
+        ...formData,
+        startDate: convertToUtcISO(formData.startDate),
+      };
+      const addedItem = toCamelCase(await GirlMathAPI.addBudgetItem(newItem));
+
+      if (!addedItem) throw new Error("Failed to add item");
+
+      setAppState({ budgetItems: sortByDay([...budgetItems, addedItem]) });
+    } catch (err) {
+      console.error("Failed to add budget item:", err);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    await addItem(formData);
+    setFormData(initialFormData);
   }
 
   function handleOptionClick(freq: string) {
@@ -85,11 +99,6 @@ export default function AddItemForm() {
       ...formData,
       freq,
     }));
-  }
-
-  function handleSubmit() {
-    addItem(formData);
-    setFormData(initialFormData);
   }
 
   function clearForm() {

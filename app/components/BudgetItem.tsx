@@ -3,17 +3,15 @@ import CostInfo from "./common/CostInfo";
 import DateInfo from "./common/DateInfo";
 import Chip from "./common/Chip";
 import { calculateMonthly, capitalize } from "@/utils/helpers";
+import GirlMathAPI from "@/utils/api";
 import useAppStore from "../store/appStore";
 
 export default function BudgetItem({ item, className }: IBudgetItemProps) {
   const { budgetItems, nearestPaymentDate, split, setAppState } = useAppStore();
 
-  console.log("BUDGET ITEM:", item);
-  console.log(typeof item.id, typeof item.cost);
-
   const highlight =
     nearestPaymentDate &&
-    item.startDate.slice(8, 10) === nearestPaymentDate.slice(8, 10);
+    item?.startDate?.slice(8, 10) === nearestPaymentDate?.slice(8, 10);
 
   return (
     <div
@@ -34,11 +32,16 @@ export default function BudgetItem({ item, className }: IBudgetItemProps) {
     </div>
   );
 
-  function deleteItem(): void {
-    const filtered: IBudgetItem[] = budgetItems.filter((bItem) => {
-      return bItem.id !== item.id;
-    });
-    setAppState({ budgetItems: filtered });
+  async function deleteItem(): Promise<void> {
+    try {
+      const filtered: IBudgetItem[] = budgetItems.filter(
+        (bItem) => bItem.id !== item.id
+      );
+      await GirlMathAPI.deleteBudgetItem(item.id);
+      setAppState({ budgetItems: filtered });
+    } catch (err) {
+      console.error("ERROR: Failed to delete budget item:", err);
+    }
   }
 
   function determineStyling(): string {

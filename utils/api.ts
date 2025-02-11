@@ -5,14 +5,14 @@ const BASE_URL = `http://localhost:${BACKEND_PORT}/api`;
 
 interface IBudgetItem {
   name: string;
-  cost: string;
+  cost: number;
   freq: string;
   startDate: string;
 }
 
 interface IDebtItem {
   name: string;
-  amount: string;
+  amount: number;
 }
 
 class GirlMathAPI {
@@ -53,7 +53,7 @@ class GirlMathAPI {
     await axios.delete(`${BASE_URL}/debt-items/${id}`);
   }
 
-  //--MONTHLY-INCOME------------------------------------------------------------//
+  //--MONTHLY-INCOME----------------------------------------------------------//
 
   static async getAppSettings() {
     const res = await axios.get(`${BASE_URL}/app-settings`);
@@ -62,9 +62,9 @@ class GirlMathAPI {
 
   static async updateMonthlyIncome(income: number) {
     const res = await axios.put(`${BASE_URL}/app-settings`, {
-      monthly_income: income,
+      monthlyIncome: income,
     });
-    return res.data;
+    return res.data.monthlyIncome;
   }
 }
 
