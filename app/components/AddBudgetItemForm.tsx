@@ -6,11 +6,15 @@ import GirlMathAPI from "@/utils/api";
 import { sortByDay, toCamelCase } from "@/utils/helpers";
 import { useState } from "react";
 
-export default function AddItemForm() {
+export default function AddBudgetItemForm({
+  groupFreq,
+}: {
+  groupFreq?: string;
+}) {
   const initialFormData: IFormData = {
     name: "",
     cost: "",
-    freq: "Monthly",
+    freq: groupFreq || "Monthly",
     startDate: "",
   };
 
@@ -19,7 +23,10 @@ export default function AddItemForm() {
   const { budgetItems, setAppState } = useAppStore();
 
   return (
-    <form className="ADD-ITEM-FORM flex h-12 gap-4" onSubmit={handleSubmit}>
+    <form
+      className="ADD-BUDGET-ITEM-FORM flex h-[62px] p-1 gap-3"
+      onSubmit={handleSubmit}
+    >
       <div className="flex flex-grow">
         <InputField
           inputName="name"
@@ -46,22 +53,26 @@ export default function AddItemForm() {
             formData.freq ? `${formData.freq}-outline` : "Default-outline"
           }
         />
+      </div>
+      {!groupFreq && (
         <FrequencyInput selected={formData.freq} onClick={handleOptionClick} />
+      )}
+      <div className="flex gap-1 justify-center">
         <Button
-          onClick={clearForm}
-          className={`w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black ${formData.freq}-outline`}
+          className={`w-[52px] font-arial font-bold text-[2rem] active:bg-white active:border-white ${formData.freq}-hover
+          ${formData.freq ? `${formData.freq}-outline` : "Default-outline"}
+        `}
+          type="submit"
+        >
+          +
+        </Button>
+        <Button
+          onClick={() => setAppState({ addingBudgetItem: false })}
+          className={`w-[52px] font-arial font-bold ${formData.freq}-hover hover:text-black active:bg-white active:border-white active:text-black ${formData.freq}-outline`}
         >
           X
         </Button>
       </div>
-      <Button
-        className={`active:bg-white active:border-white hover:font-bold
-          ${formData.freq ? `${formData.freq}-filled` : "Default-outline"}
-        `}
-        type="submit"
-      >
-        Add Item
-      </Button>
     </form>
   );
 
@@ -74,11 +85,14 @@ export default function AddItemForm() {
       }
     }
     try {
-      const newItem = {
+      const formattedItem = {
         ...formData,
+        cost: Number(formData.cost),
         startDate: convertToUtcISO(formData.startDate),
       };
-      const addedItem = toCamelCase(await GirlMathAPI.addBudgetItem(newItem));
+      const addedItem = toCamelCase(
+        await GirlMathAPI.addBudgetItem(formattedItem)
+      );
 
       if (!addedItem) throw new Error("Failed to add item");
 
@@ -99,10 +113,6 @@ export default function AddItemForm() {
       ...formData,
       freq,
     }));
-  }
-
-  function clearForm() {
-    setFormData(initialFormData);
   }
 
   function formatCurrency(value: string) {

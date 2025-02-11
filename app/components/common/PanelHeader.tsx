@@ -28,7 +28,7 @@ export default function PanelHeader({
 
       {onButtonClick && (
         <Button
-          className={`${groupFreq}-outline ${groupFreq}-hover bg-black outline outline-black h-[25px] font-bold hover:text-black`}
+          className={`${groupFreq}-outline ${groupFreq}-hover font-arial bg-black outline outline-black h-[25px] font-bold hover:text-black`}
           onClick={onButtonClick}
           onMouseEnter={handleAddHover}
           onMouseLeave={handleAddLeave}

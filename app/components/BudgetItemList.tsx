@@ -2,13 +2,14 @@ import BudgetItem from "./BudgetItem";
 import PanelHeader from "./common/PanelHeader";
 import { useState } from "react";
 import useAppStore from "../store/appStore";
+import AddBudgetItemForm from "./AddBudgetItemForm";
 
 export default function BudgetItemList({
   items,
   groupFreq,
 }: IBudgetItemListProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const { setAppState } = useAppStore();
+  const { setAppState, addingBudgetItem } = useAppStore();
 
   return (
     <div
@@ -26,6 +27,7 @@ export default function BudgetItemList({
       />
 
       <div className={collapsed ? "hidden" : ""}>
+        {addingBudgetItem && <AddBudgetItemForm groupFreq={groupFreq} />}
         {items.map((item, i) => (
           <BudgetItem key={i} item={item} />
         ))}

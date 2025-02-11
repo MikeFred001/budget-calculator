@@ -16,15 +16,15 @@ export default function FrequencyInput({
         <Button
           key={i}
           onClick={() => onClick(option)}
-          className={`hover:font-bold cursor-pointer
+          className={`hover:font-bold cursor-pointer flex-grow
             ${
               selected && selected === option
-                ? `${selected}-filled`
-                : `${selected}-outline`
+                ? `${selected}-filled w-[7.5rem]`
+                : `${selected}-outline w-[3.25rem]`
             }
           `}
         >
-          {option}
+          {selected && selected === option ? option : option[0]}
         </Button>
       ))}
     </div>

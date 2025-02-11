@@ -3,7 +3,7 @@
 import Header from "./components/Header";
 import Switch from "./components/Switch";
 import Breakdown from "./components/Breakdown";
-import AddItemForm from "./components/AddItemForm";
+import AddBudgetItemForm from "./components/AddBudgetItemForm";
 import Typography from "./components/common/Typography";
 import BudgetItemPanel from "./components/BudgetItemPanel";
 import DebtItemPanel from "./components/DebtItemPanel";
@@ -52,7 +52,7 @@ export default function Home() {
   ) : (
     <div className="HOME p-6 flex flex-col gap-4">
       <Header />
-      <AddItemForm />
+      {/* <AddBudgetItemForm /> */}
       <Switch split={split} toggleSplit={toggleSplit} />
       <Breakdown
         monthlyTotal={calculateMonthlyTotal(budgetItems)}
