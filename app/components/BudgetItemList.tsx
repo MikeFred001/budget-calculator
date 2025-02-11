@@ -1,15 +1,14 @@
 import BudgetItem from "./BudgetItem";
-import Typography from "./common/Typography";
+import PanelHeader from "./common/PanelHeader";
 import { useState } from "react";
+import useAppStore from "../store/appStore";
 
 export default function BudgetItemList({
   items,
   groupFreq,
 }: IBudgetItemListProps) {
-  const defaultHeaderText = groupFreq ? groupFreq : "Monthly Payments";
-
   const [collapsed, setCollapsed] = useState(false);
-  const [headerText, setHeaderText] = useState(defaultHeaderText);
+  const { setAppState } = useAppStore();
 
   return (
     <div
@@ -18,17 +17,14 @@ export default function BudgetItemList({
         ${items.length < 1 ? "hidden" : ""}
       `}
     >
-      <div
-        className={`
-          ${groupFreq ? `${groupFreq}-filled ${groupFreq}-hover` : "Default-filled hover:bg-green-500"}
-          px-2 cursor-pointer
-        `}
-        onClick={handleHeaderClick}
-        onMouseEnter={handleHeaderHover}
-        onMouseLeave={() => setHeaderText(defaultHeaderText)}
-      >
-        <Typography className="text-black font-bold">{headerText}</Typography>
-      </div>
+      <PanelHeader
+        defaultText={groupFreq || "Monthly Costs"}
+        collapsed={collapsed}
+        groupFreq={groupFreq}
+        setCollapsed={setCollapsed}
+        onButtonClick={() => setAppState({ addingBudgetItem: true })}
+      />
+
       <div className={collapsed ? "hidden" : ""}>
         {items.map((item, i) => (
           <BudgetItem key={i} item={item} />
@@ -36,23 +32,6 @@ export default function BudgetItemList({
       </div>
     </div>
   );
-
-  function handleHeaderHover() {
-    if (collapsed) {
-      setHeaderText("EXPAND");
-    } else {
-      setHeaderText("COLLAPSE");
-    }
-  }
-
-  function handleHeaderClick() {
-    setCollapsed(!collapsed);
-    if (headerText === "EXPAND") {
-      setHeaderText("COLLAPSE");
-    } else {
-      setHeaderText("EXPAND");
-    }
-  }
 }
 
 interface IBudgetItem {

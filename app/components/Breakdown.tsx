@@ -1,6 +1,6 @@
-import Typography from "./common/Typography";
 import BreakdownCell from "./BreakdownCell";
 import EditIncomeForm from "./EditIncomeForm";
+import PanelHeader from "./common/PanelHeader";
 import { useState } from "react";
 
 import useAppStore from "../store/appStore";
@@ -9,22 +9,18 @@ export default function Breakdown({
   monthlyTotal,
   monthlyIncome,
 }: IBreakdownProps) {
-  const monthlyRemaining: number = monthlyIncome - monthlyTotal;
+  const [collapsed, setCollapsed] = useState(false);
   const { editingIncome } = useAppStore();
 
-  const [collapsed, setCollapsed] = useState(false);
-  const [headerText, setHeaderText] = useState("Monthly Breakdown");
+  const monthlyRemaining: number = monthlyIncome - monthlyTotal;
 
   return (
     <div className="BREAKDOWN flex-flex-col border Default-outline">
-      <div
-        className="px-2 bg-green-300 hover:bg-green-500 cursor-pointer"
-        onClick={handleHeaderClick}
-        onMouseEnter={handleHeaderHover}
-        onMouseLeave={() => setHeaderText("Monthly Breakdown")}
-      >
-        <Typography className="text-black font-bold">{headerText}</Typography>
-      </div>
+      <PanelHeader
+        defaultText="Monthly Breakdown"
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
       <div
         className={`grid grid-cols-3 text-center border-2 border-green-300 ${
           collapsed ? "hidden" : ""
@@ -49,23 +45,6 @@ export default function Breakdown({
       </div>
     </div>
   );
-
-  function handleHeaderHover() {
-    if (collapsed) {
-      setHeaderText("EXPAND");
-    } else {
-      setHeaderText("COLLAPSE");
-    }
-  }
-
-  function handleHeaderClick() {
-    setCollapsed(!collapsed);
-    if (headerText === "EXPAND") {
-      setHeaderText("COLLAPSE");
-    } else {
-      setHeaderText("EXPAND");
-    }
-  }
 }
 
 interface IBreakdownProps {

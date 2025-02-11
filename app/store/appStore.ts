@@ -9,6 +9,7 @@ interface IAppState {
   split: boolean;
   editingIncome: boolean;
   addingDebtItem: boolean;
+  addingBudgetItem: boolean;
   nearestPaymentDate?: string;
   loading: boolean;
   setAppState: (payload: Partial<IAppState>) => void;
@@ -37,6 +38,7 @@ const useAppStore = create<IAppState>()(
       split: false,
       editingIncome: false,
       addingDebtItem: false,
+      addingBudgetItem: false,
       nextPaymentDate: "",
       loading: true,
       setAppState: (payload) => set((state) => ({ ...state, ...payload })),

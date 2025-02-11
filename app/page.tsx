@@ -5,9 +5,8 @@ import Switch from "./components/Switch";
 import Breakdown from "./components/Breakdown";
 import AddItemForm from "./components/AddItemForm";
 import Typography from "./components/common/Typography";
-import BudgetItemList from "./components/BudgetItemList";
-import SplitBudgetItemList from "./components/SplitBudgetItemList";
-import DebtItemList from "./components/DebtItemList";
+import BudgetItemPanel from "./components/BudgetItemPanel";
+import DebtItemPanel from "./components/DebtItemPanel";
 import GirlMathAPI from "@/utils/api";
 import { sortByFullDate, toCamelCase, sortByDay } from "@/utils/helpers";
 import { useEffect } from "react";
@@ -59,12 +58,8 @@ export default function Home() {
         monthlyTotal={calculateMonthlyTotal(budgetItems)}
         monthlyIncome={monthlyIncome}
       />
-      {split ? (
-        <SplitBudgetItemList items={budgetItems} />
-      ) : (
-        <BudgetItemList items={budgetItems} />
-      )}
-      <DebtItemList items={debtItems} />
+      <BudgetItemPanel budgetItems={budgetItems} />
+      <DebtItemPanel items={debtItems} />
     </div>
   );
 
