@@ -1,6 +1,7 @@
 import BudgetItem from "./BudgetItem";
 import PanelHeader from "./common/PanelHeader";
 import { useState } from "react";
+import { sortByFullDate, sortByDay } from "@/utils/helpers";
 import useAppStore from "../store/appStore";
 import AddBudgetItemForm from "./AddBudgetItemForm";
 
@@ -9,7 +10,12 @@ export default function BudgetItemList({
   groupFreq,
 }: IBudgetItemListProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const { setAppState, addingBudgetItem } = useAppStore();
+  const { addingBudgetItem, budgetItemsSorted, split, setAppState } =
+    useAppStore();
+
+  const sortedItems = budgetItemsSorted
+    ? sortByFullDate(items)
+    : sortByDay(items);
 
   return (
     <div
@@ -28,7 +34,7 @@ export default function BudgetItemList({
 
       <div className={collapsed ? "hidden" : ""}>
         {addingBudgetItem && <AddBudgetItemForm groupFreq={groupFreq} />}
-        {items.map((item, i) => (
+        {sortedItems.map((item, i) => (
           <BudgetItem key={i} item={item} />
         ))}
       </div>

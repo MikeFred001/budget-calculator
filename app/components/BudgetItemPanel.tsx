@@ -1,19 +1,21 @@
 import useAppStore from "../store/appStore";
 import BudgetItemList from "./BudgetItemList";
 import SplitBudgetItemList from "./SplitBudgetItemList";
+import Controls from "./Controls";
 
 export default function BudgetItemPanel({
   budgetItems,
 }: IBudgetItemPanelProps) {
   const { split } = useAppStore();
-  return split ? (
-    <>
-      <SplitBudgetItemList items={budgetItems} />
-    </>
-  ) : (
-    <>
-      <BudgetItemList items={budgetItems} />
-    </>
+  return (
+    <div className="BUDGET-ITEM-PANEL flex flex-col gap-2">
+      <Controls />
+      {split ? (
+        <SplitBudgetItemList items={budgetItems} />
+      ) : (
+        <BudgetItemList items={budgetItems} />
+      )}
+    </div>
   );
 }
 

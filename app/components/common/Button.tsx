@@ -1,6 +1,7 @@
 export default function Button({
   className,
   children,
+  style,
   type = "button",
   onClick,
   onMouseEnter,
@@ -13,6 +14,7 @@ export default function Button({
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      style={style}
     >
       {children}
     </button>
@@ -21,6 +23,7 @@ export default function Button({
 
 interface IButtonProps {
   className?: string;
+  style?: React.CSSProperties;
   type?: "button" | "submit" | "reset";
   onClick?: (e) => void;
   onMouseEnter?: () => void;

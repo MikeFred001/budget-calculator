@@ -1,19 +1,17 @@
 "use client";
 
 import Header from "./components/Header";
-import Switch from "./components/Switch";
 import Breakdown from "./components/Breakdown";
-import AddBudgetItemForm from "./components/AddBudgetItemForm";
 import Typography from "./components/common/Typography";
 import BudgetItemPanel from "./components/BudgetItemPanel";
 import DebtItemPanel from "./components/DebtItemPanel";
 import GirlMathAPI from "@/utils/api";
-import { sortByFullDate, toCamelCase, sortByDay } from "@/utils/helpers";
+import { sortByFullDate, toCamelCase } from "@/utils/helpers";
 import { useEffect } from "react";
 import useAppStore from "./store/appStore";
 
 export default function Home() {
-  const { budgetItems, debtItems, monthlyIncome, split, loading, setAppState } =
+  const { budgetItems, debtItems, monthlyIncome, loading, setAppState } =
     useAppStore();
 
   useEffect(() => {
@@ -25,7 +23,7 @@ export default function Home() {
         const appSettings = toCamelCase(await GirlMathAPI.getAppSettings());
 
         setAppState({
-          budgetItems: sortByDay(budgetItems),
+          budgetItems,
           debtItems,
           monthlyIncome: Number(appSettings.monthlyIncome),
           loading: false,
@@ -50,10 +48,8 @@ export default function Home() {
   return loading ? (
     <Typography>The matrix has you, Neo.</Typography>
   ) : (
-    <div className="HOME p-6 flex flex-col gap-4">
+    <div className="HOME p-6 flex flex-col gap-8">
       <Header />
-      {/* <AddBudgetItemForm /> */}
-      <Switch split={split} toggleSplit={toggleSplit} />
       <Breakdown
         monthlyTotal={calculateMonthlyTotal(budgetItems)}
         monthlyIncome={monthlyIncome}
@@ -62,10 +58,6 @@ export default function Home() {
       <DebtItemPanel items={debtItems} />
     </div>
   );
-
-  function toggleSplit(setting: boolean) {
-    setAppState({ split: setting });
-  }
 
   function calculateMonthlyTotal(budgetItems: IBudgetItem[]): number {
     const freqMapping = { BiWeekly: 0.5, Monthly: 1, Yearly: 12 };
@@ -96,4 +88,10 @@ interface IBudgetItem {
   cost: number;
   freq: string;
   startDate: string;
+}
+
+interface IDebtItem {
+  id: number;
+  name: string;
+  amount: number;
 }

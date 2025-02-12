@@ -7,6 +7,7 @@ interface IAppState {
   debtItems: IDebtItem[];
   monthlyIncome: number;
   split: boolean;
+  budgetItemsSorted: boolean;
   editingIncome: boolean;
   addingDebtItem: boolean;
   addingBudgetItem: boolean;
@@ -36,6 +37,7 @@ const useAppStore = create<IAppState>()(
       debtItems: [],
       monthlyIncome: 0,
       split: false,
+      budgetItemsSorted: false,
       editingIncome: false,
       addingDebtItem: false,
       addingBudgetItem: false,

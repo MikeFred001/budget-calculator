@@ -7,11 +7,18 @@ import GirlMathAPI from "@/utils/api";
 import useAppStore from "../store/appStore";
 
 export default function BudgetItem({ item, className }: IBudgetItemProps) {
-  const { budgetItems, nearestPaymentDate, split, setAppState } = useAppStore();
+  const {
+    budgetItems,
+    nearestPaymentDate,
+    split,
+    budgetItemsSorted,
+    setAppState,
+  } = useAppStore();
 
   const highlight =
-    nearestPaymentDate &&
-    item?.startDate?.slice(8, 10) === nearestPaymentDate?.slice(8, 10);
+    (nearestPaymentDate && !budgetItemsSorted) || split
+      ? item?.startDate?.slice(8, 10) === nearestPaymentDate?.slice(8, 10)
+      : false;
 
   return (
     <div

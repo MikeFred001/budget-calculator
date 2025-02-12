@@ -5,10 +5,11 @@ import DebtItem from "./DebtItem";
 
 export default function DebtItemList({ items }: IDebtItemListProps) {
   const { addingDebtItem } = useAppStore();
+  const sortedDebtItems = items.sort((a, b) => a.amount - b.amount);
   return (
     <div className="DEBT-ITEM-LIST flex-grow">
       {addingDebtItem && <AddDebtItemForm />}
-      {items.map((item, i) => (
+      {sortedDebtItems.map((item, i) => (
         <DebtItem key={i} item={item} />
       ))}
     </div>

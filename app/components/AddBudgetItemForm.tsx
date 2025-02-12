@@ -19,12 +19,11 @@ export default function AddBudgetItemForm({
   };
 
   const [formData, setFormData] = useState(initialFormData);
-
   const { budgetItems, setAppState } = useAppStore();
 
   return (
     <form
-      className="ADD-BUDGET-ITEM-FORM flex h-[62px] p-1 gap-3"
+      className="ADD-BUDGET-ITEM-FORM flex h-14 p-1 gap-3"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-grow">
