@@ -1,6 +1,5 @@
 import DebtItemList from "./DebtItemList";
 import PanelHeader from "./common/PanelHeader";
-import DebtTotal from "./DebtTotal";
 import { useState } from "react";
 import useAppStore from "../store/appStore";
 
@@ -16,23 +15,9 @@ export default function DebtItemPanel({ items }: IDebtItemPanelProps) {
         setCollapsed={setCollapsed}
         onButtonClick={() => setAppState({ addingDebtItem: true })}
       />
-      <div className={`flex justify-between ${collapsed ? "hidden" : ""}`}>
-        <DebtItemList items={items} />
-        {items.length > 1 && <DebtTotal total={calculateDebtTotal(items)} />}
-      </div>
+      <DebtItemList items={items} className={collapsed ? "hidden" : ""} />
     </div>
   );
-
-  function calculateDebtTotal(debtItems: IDebtItem[]): number {
-    let totalInCents: number = 0;
-
-    for (let item of debtItems) {
-      const amountInCents = Math.round(item.amount * 100);
-      totalInCents += Math.floor(amountInCents);
-    }
-
-    return totalInCents / 100;
-  }
 }
 
 interface IDebtItem {

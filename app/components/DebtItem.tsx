@@ -3,7 +3,7 @@ import Button from "./common/Button";
 import EditDebtItemForm from "./EditDebtItemForm";
 import { capitalize } from "@/utils/helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import GirlMathAPI from "@/utils/api";
 import useAppStore from "../store/appStore";
@@ -15,12 +15,23 @@ export default function DebtItem({ item, className }: IDebtItemProps) {
   return !editingDebtItem ? (
     <div
       className={`
-      DEBT-ITEM flex items-center p-2 border Default-outline text-[1.4rem] ${className}
+      DEBT-ITEM flex items-center justify-between p-2 border Default-outline text-[1.1rem] md:text-[1.4rem] ${className}
     `}
     >
-      <div className="flex justify-between items-center flex-grow pr-6">
+      {/* Desktop */}
+      <div className="justify-between items-center flex-grow pr-6 hidden md:flex">
         <Typography>{capitalize(item.name)}</Typography>
         <Typography currency className="text-right">
+          {item.amount}
+        </Typography>
+      </div>
+
+      {/* Mobile */}
+      <div className="flex flex-col md:hidden">
+        <Typography className="leading-none">
+          {capitalize(item.name)}
+        </Typography>
+        <Typography currency className="opacity-80 text-[1rem] leading-none">
           {item.amount}
         </Typography>
       </div>
@@ -35,7 +46,7 @@ export default function DebtItem({ item, className }: IDebtItemProps) {
           onClick={deleteItem}
           className={`size-[45px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
         >
-          X
+          <FontAwesomeIcon icon={faTrashCan} />
         </Button>
       </div>
     </div>

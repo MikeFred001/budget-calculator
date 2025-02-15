@@ -1,10 +1,8 @@
 import InputField from "./common/InputField";
 import Button from "./common/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFloppyDisk,
-  faArrowAltCircleLeft,
-} from "@fortawesome/free-regular-svg-icons";
+import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
 import GirlMathAPI from "@/utils/api";
 import { useState, useEffect, useRef } from "react";
 import useAppStore from "../store/appStore";
@@ -31,21 +29,22 @@ export default function EditDebtItemForm({
 
   return (
     <form
-      className="EDIT-DEBT-ITEM-FORM flex items-center h-[60px] gap-[1px]"
+      className="EDIT-DEBT-ITEM-FORM flex items-center gap-[1px]"
       onSubmit={handleSubmit}
     >
-      <div className="flex flex-grow h-[90%] px-1">
+      <div className="flex flex-grow flex-wrap h-[90%] p-1">
         <InputField
           inputName="name"
           value={formData.name}
           onChange={handleChange}
           inputRef={inputRef}
-          className="flex-grow"
+          className="w-full flex-grow mb-1 md:w-[10rem] md:mb-0"
         />
         <InputField
           inputName="amount"
           value={formData.amount}
           onChange={handleChange}
+          className="w-[6rem] flex-grow md:flex-initial md:w-[10rem]"
         />
         <Button
           className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
@@ -57,7 +56,7 @@ export default function EditDebtItemForm({
           onClick={() => setEditingDebtItem(false)}
           className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
         >
-          <FontAwesomeIcon icon={faArrowAltCircleLeft} />
+          <FontAwesomeIcon icon={faBan} />
         </Button>
       </div>
     </form>

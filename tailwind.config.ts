@@ -17,5 +17,13 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        ".vertical-text": {
+          "writing-mode": "vertical-rl",
+        },
+      });
+    },
+  ],
 } satisfies Config;

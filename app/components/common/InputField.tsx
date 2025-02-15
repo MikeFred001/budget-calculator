@@ -12,7 +12,7 @@ export default function InputField({
     <input
       className={`
         INPUT-FIELD border border-green-300 bg-transparent
-        p-2 focus:outline-none focus:border-[3px] w-[10rem]
+        p-2 focus:outline-none focus:border-[3px]
         ${className}
       `}
       id={name}

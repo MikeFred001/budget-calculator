@@ -9,7 +9,7 @@ export default function ScalableImage({
 }: IScalableImageProps) {
   return (
     <div
-      className={`relative ${containerClassName}`}
+      className={`SCALABLE-IMAGE relative ${containerClassName}`}
       style={{
         width: width ? `${width}px` : "auto",
         height: height ? `${height}px` : "auto",

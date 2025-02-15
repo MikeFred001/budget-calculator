@@ -10,7 +10,7 @@ interface IAppState {
   budgetItemsSorted: boolean;
   editingIncome: boolean;
   addingDebtItem: boolean;
-  addingBudgetItem: boolean;
+  addingBudgetItem: "Default" | "BiWeekly" | "Monthly" | "Yearly" | "";
   nearestPaymentDate?: string;
   loading: boolean;
   setAppState: (payload: Partial<IAppState>) => void;
@@ -40,7 +40,7 @@ const useAppStore = create<IAppState>()(
       budgetItemsSorted: false,
       editingIncome: false,
       addingDebtItem: false,
-      addingBudgetItem: false,
+      addingBudgetItem: "",
       nextPaymentDate: "",
       loading: true,
       setAppState: (payload) => set((state) => ({ ...state, ...payload })),

@@ -1,5 +1,7 @@
 import Typography from "./common/Typography";
 import { useState } from "react";
+import { faEdit } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import useAppStore from "../store/appStore";
 
@@ -10,30 +12,39 @@ export default function BreakdownCell({
   className = "",
 }: IBreakdownCellProps) {
   const [hover, setHover] = useState(false);
-  const { setAppState } = useAppStore();
+  const { editingIncome, setAppState } = useAppStore();
 
-  const hoverStyling: string = "bg-green-900 cursor-pointer";
+  const hoverStyling = "bg-green-900 cursor-pointer";
+
+  console.log("EDITABLE", editable);
+  console.log("EDITING INCOME", editingIncome);
 
   return (
     <div
-      className={`BREAKDOWN-CELL flex flex-col items-center leading-none relative border-green-300 py-5 group
+      className={`BREAKDOWN-CELL relative flex flex-row justify-between p-2 md:px-0 md:flex-col items-center leading-none md:relative border-green-300 md:py-5 group
       ${hover && editable ? hoverStyling : ""}
       ${className}`}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={showEditForm}
     >
+      {editable && !editingIncome && (
+        <FontAwesomeIcon
+          icon={faEdit}
+          className="absolute top-[2px] text-[.6rem] left-[3px] md:left-auto md:text-[.9rem] md:top-1 md:right-1"
+        />
+      )}
       <Typography
-        className={`absolute left-1 top-1 font-semibold text-[.9rem]
-          ${hover && editable ? "text-[1.25rem]" : ""}
+        className={`md:absolute md:left-1 md:top-1 font-semibold text-[1.1rem]
         `}
       >
-        {hover && editable ? "EDIT" : title}
+        {title}
       </Typography>
+
       <Typography className="text-[2rem]" currency>
         {amount}
       </Typography>
-      <Typography className="text-[1.2rem] opacity-70" currency>
+      <Typography className="hidden text-[1.2rem] opacity-70 md:block" currency>
         {amount / 2}
       </Typography>
     </div>

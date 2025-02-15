@@ -4,14 +4,14 @@ import { useState } from "react";
 import { sortByFullDate, sortByDay } from "@/utils/helpers";
 import useAppStore from "../store/appStore";
 import AddBudgetItemForm from "./AddBudgetItemForm";
+import BudgetItemMobile from "./BudgetItemMobile";
 
 export default function BudgetItemList({
   items,
   groupFreq,
 }: IBudgetItemListProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const { addingBudgetItem, budgetItemsSorted, split, setAppState } =
-    useAppStore();
+  const { addingBudgetItem, budgetItemsSorted, setAppState } = useAppStore();
 
   const sortedItems = budgetItemsSorted
     ? sortByFullDate(items)
@@ -29,13 +29,26 @@ export default function BudgetItemList({
         collapsed={collapsed}
         groupFreq={groupFreq}
         setCollapsed={setCollapsed}
-        onButtonClick={() => setAppState({ addingBudgetItem: true })}
+        onButtonClick={() => setAppState({ addingBudgetItem: groupFreq })}
       />
 
-      <div className={collapsed ? "hidden" : ""}>
-        {addingBudgetItem && <AddBudgetItemForm groupFreq={groupFreq} />}
+      {/* Desktop */}
+      <div className={`${collapsed ? "md:hidden" : ""} md:block hidden`}>
+        {addingBudgetItem === groupFreq && (
+          <AddBudgetItemForm groupFreq={groupFreq} />
+        )}
         {sortedItems.map((item, i) => (
           <BudgetItem key={i} item={item} />
+        ))}
+      </div>
+
+      {/* Mobile */}
+      <div className={`${collapsed ? "hidden" : ""} md:hidden block`}>
+        {addingBudgetItem === groupFreq && (
+          <AddBudgetItemForm groupFreq={groupFreq} />
+        )}
+        {sortedItems.map((item, i) => (
+          <BudgetItemMobile key={i} item={item} />
         ))}
       </div>
     </div>
@@ -52,5 +65,5 @@ interface IBudgetItem {
 
 interface IBudgetItemListProps {
   items: IBudgetItem[];
-  groupFreq?: string;
+  groupFreq?: "Default" | "BiWeekly" | "Monthly" | "Yearly";
 }

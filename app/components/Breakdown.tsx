@@ -15,14 +15,14 @@ export default function Breakdown({
   const monthlyRemaining: number = monthlyIncome - monthlyTotal;
 
   return (
-    <div className="BREAKDOWN flex-flex-col border Default-outline">
+    <div className="BREAKDOWN flex flex-col border Default-outline">
       <PanelHeader
         defaultText="Monthly Breakdown"
         collapsed={collapsed}
         setCollapsed={setCollapsed}
       />
       <div
-        className={`grid grid-cols-3 text-center border-2 border-green-300 ${
+        className={`grid grid-cols-1 text-center border-2 border-green-300 md:grid-cols-3 ${
           collapsed ? "hidden" : ""
         } ${monthlyRemaining < 0 ? "text-red-600" : ""}`}
       >
@@ -32,14 +32,14 @@ export default function Breakdown({
           <BreakdownCell
             title="Income"
             amount={monthlyIncome}
-            className="border-r"
+            className="border-b md:border-r"
             editable
           />
         )}
         <BreakdownCell
           title="Total"
           amount={monthlyTotal}
-          className="border-r"
+          className="border-b md:border-r"
         />
         <BreakdownCell title="Remaining" amount={monthlyRemaining} />
       </div>

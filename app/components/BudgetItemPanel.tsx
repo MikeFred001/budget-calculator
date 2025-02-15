@@ -7,6 +7,7 @@ export default function BudgetItemPanel({
   budgetItems,
 }: IBudgetItemPanelProps) {
   const { split } = useAppStore();
+
   return (
     <div className="BUDGET-ITEM-PANEL flex flex-col gap-2">
       <Controls />

@@ -2,6 +2,7 @@ import Button from "./common/Button";
 
 export default function FrequencyInput({
   selected,
+  className,
   onClick,
 }: IFrequencyInputProps) {
   const options = ["BiWeekly", "Monthly", "Yearly"];
@@ -10,17 +11,18 @@ export default function FrequencyInput({
     <div
       className={`FREQUENCY-INPUT flex h-full
         ${selected ? `${selected}-outline` : "Default-outline"}
+        ${className}
       `}
     >
       {options.map((option, i) => (
         <Button
           key={i}
           onClick={() => onClick(option)}
-          className={`hover:font-bold cursor-pointer flex-grow
+          className={`hover:font-bold cursor-pointer
             ${
               selected && selected === option
-                ? `${selected}-filled w-[7.5rem]`
-                : `${selected}-outline w-[3.25rem]`
+                ? `${selected}-filled md:w-[7.5rem] flex-grow`
+                : `${selected}-outline md:w-[3.25rem] flex-grow`
             }
           `}
         >
@@ -33,5 +35,6 @@ export default function FrequencyInput({
 
 interface IFrequencyInputProps {
   selected: string;
+  className?: string;
   onClick: (value: string) => void;
 }

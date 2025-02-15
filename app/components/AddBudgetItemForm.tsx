@@ -4,6 +4,8 @@ import Button from "./common/Button";
 import useAppStore from "../store/appStore";
 import GirlMathAPI from "@/utils/api";
 import { sortByDay, toCamelCase } from "@/utils/helpers";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 export default function AddBudgetItemForm({
@@ -23,40 +25,51 @@ export default function AddBudgetItemForm({
 
   return (
     <form
-      className="ADD-BUDGET-ITEM-FORM flex h-14 p-1 gap-3"
+      className="ADD-BUDGET-ITEM-FORM flex flex-col md:h-14 p-1 gap-[2px] md:gap-3 md:flex-row"
       onSubmit={handleSubmit}
     >
-      <div className="flex flex-grow">
+      <div className="flex flex-col md:flex-row md:flex-grow gap-[2px] md:gap-0">
         <InputField
           inputName="name"
           value={formData.name}
           onChange={handleChange}
-          className={`flex-grow ${
-            formData.freq ? `${formData.freq}-outline` : "Default-outline"
-          }`}
+          className={`flex-grow w-full md:w-[9rem]
+            ${formData.freq ? `${formData.freq}-outline` : "Default-outline"}
+          `}
         />
         <InputField
           inputName="cost"
           value={formData.cost}
           onChange={handleChange}
-          className={
-            formData.freq ? `${formData.freq}-outline` : "Default-outline"
-          }
+          className={`w-full md:w-[9rem]
+            ${formData.freq ? `${formData.freq}-outline` : "Default-outline"}
+          `}
         />
         <InputField
           inputName="startDate"
           value={formData.startDate}
           maxLength={10}
           onChange={handleChange}
-          className={
-            formData.freq ? `${formData.freq}-outline` : "Default-outline"
-          }
+          className={`w-full md:w-[9rem]
+            ${formData.freq ? `${formData.freq}-outline` : "Default-outline"}
+          `}
         />
       </div>
       {!groupFreq && (
-        <FrequencyInput selected={formData.freq} onClick={handleOptionClick} />
+        <FrequencyInput
+          selected={formData.freq}
+          onClick={handleOptionClick}
+          className="hidden md:flex"
+        />
       )}
       <div className="flex gap-1 justify-center">
+        {!groupFreq && (
+          <FrequencyInput
+            selected={formData.freq}
+            onClick={handleOptionClick}
+            className="md:hidden flex h-[50px] flex-grow"
+          />
+        )}
         <Button
           className={`w-[52px] font-arial font-bold text-[2rem] active:bg-white active:border-white ${formData.freq}-hover
           ${formData.freq ? `${formData.freq}-outline` : "Default-outline"}
@@ -66,10 +79,10 @@ export default function AddBudgetItemForm({
           +
         </Button>
         <Button
-          onClick={() => setAppState({ addingBudgetItem: false })}
+          onClick={() => setAppState({ addingBudgetItem: "" })}
           className={`w-[52px] font-arial font-bold ${formData.freq}-hover hover:text-black active:bg-white active:border-white active:text-black ${formData.freq}-outline`}
         >
-          X
+          <FontAwesomeIcon icon={faBan} />
         </Button>
       </div>
     </form>

@@ -5,20 +5,18 @@ import { useState } from "react";
 export default function PanelHeader({
   defaultText,
   collapsed,
-  groupFreq,
+  groupFreq = "Default",
   onButtonClick,
   setCollapsed,
 }: IPanelHeaderProps) {
   const [headerText, setHeaderText] = useState(defaultText);
   const [headerDisabled, setHeaderDisabled] = useState(false);
 
-  groupFreq = groupFreq ? groupFreq : "Default";
-
   return (
     <div
       className={`
-        ${groupFreq}-filled ${defaultText === headerText ? "" : `${groupFreq}-hover`}
-        px-2 cursor-pointer flex justify-between items-center
+        PANEL-HEADER ${groupFreq}-filled ${defaultText === headerText ? "" : `${groupFreq}-hover`}
+        px-2 cursor-pointer flex justify-between items-center md:h-8 h-12
       `}
       onClick={handleHeaderClick}
       onMouseEnter={handleHeaderHover}
@@ -28,7 +26,7 @@ export default function PanelHeader({
 
       {onButtonClick && (
         <Button
-          className={`${groupFreq}-outline ${groupFreq}-hover font-arial bg-black outline outline-black h-[25px] font-bold hover:text-black`}
+          className={`${groupFreq}-outline ${groupFreq}-hover font-arial bg-black outline outline-black h-[80%] font-bold hover:text-black active:border-white active:bg-white`}
           onClick={onButtonClick}
           onMouseEnter={handleAddHover}
           onMouseLeave={handleAddLeave}

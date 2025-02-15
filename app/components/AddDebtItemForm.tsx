@@ -2,7 +2,7 @@ import InputField from "./common/InputField";
 import Button from "./common/Button";
 import useAppStore from "../store/appStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from "react";
 import GirlMathAPI from "@/utils/api";
 
@@ -23,21 +23,22 @@ export default function AddDebtItemForm() {
 
   return (
     <form
-      className="ADD-DEBT-ITEM-FORM flex items-center h-[60px] gap-[1px]"
+      className="ADD-DEBT-ITEM-FORM flex items-center gap-[1px] py-1"
       onSubmit={handleSubmit}
     >
-      <div className="flex flex-grow h-[90%] px-1">
+      <div className="flex flex-wrap flex-grow h-[90%] px-1">
         <InputField
           inputName="name"
           value={formData.name}
           onChange={handleChange}
           inputRef={inputRef}
-          className="flex-grow"
+          className="w-full flex-grow mb-1 md:w-[10rem] md:mb-0"
         />
         <InputField
           inputName="amount"
           value={formData.amount}
           onChange={handleChange}
+          className="w-[6rem] flex-grow md:flex-initial md:w-[10rem]"
         />
         <Button
           className={`w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline text-[2rem]`}
@@ -49,7 +50,7 @@ export default function AddDebtItemForm() {
           onClick={() => setAppState({ addingDebtItem: false })}
           className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
         >
-          <FontAwesomeIcon icon={faArrowAltCircleLeft} />
+          <FontAwesomeIcon icon={faBan} />
         </Button>
       </div>
     </form>

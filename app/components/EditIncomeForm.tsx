@@ -2,10 +2,8 @@ import InputField from "./common/InputField";
 import Button from "./common/Button";
 import Typography from "./common/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSave,
-  faArrowAltCircleLeft,
-} from "@fortawesome/free-regular-svg-icons";
+import { faSave } from "@fortawesome/free-regular-svg-icons";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from "react";
 import GirlMathAPI from "@/utils/api";
 import useAppStore from "../store/appStore";
@@ -27,11 +25,16 @@ export default function EditIncomeForm({
 
   return (
     <form
-      className="EDIT-INCOME-FORM relative flex items-center justify-center border-r border-green-300"
+      className="EDIT-INCOME-FORM relative flex items-center justify-center border-b md:border-r border-green-300 p-1 md:py-0 md:px-2"
       onSubmit={handleSubmit}
     >
-      <div className="flex gap-[1px] h-[55px]">
-        <Typography className="absolute left-1 top-1 font-semibold text-[.9rem] leading-none">
+      <div className="flex gap-[1px] h-[45px] md:h-[55px] w-full">
+        <Typography
+          className={`
+            absolute left-1 top-1 font-semibold text-[.9rem] leading-none
+            ${editingIncome && "hidden md:inline"}
+          `}
+        >
           Income
         </Typography>
         <InputField
@@ -39,7 +42,7 @@ export default function EditIncomeForm({
           value={income}
           inputRef={inputRef}
           onChange={handleChange}
-          className="text-[1.8rem]"
+          className="text-[1.8rem] flex-grow min-w-[10rem]"
         />
         <Button
           onClick={handleSubmit}
@@ -51,7 +54,7 @@ export default function EditIncomeForm({
           onClick={() => setAppState({ editingIncome: false })}
           className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black`}
         >
-          <FontAwesomeIcon icon={faArrowAltCircleLeft} />
+          <FontAwesomeIcon icon={faBan} />
         </Button>
       </div>
     </form>
