@@ -176,11 +176,3 @@ interface IFormData {
   freq: string;
   startDate: string;
 }
-
-interface IBudgetItem {
-  id: number;
-  name: string;
-  cost: number;
-  freq: string;
-  startDate: string;
-}

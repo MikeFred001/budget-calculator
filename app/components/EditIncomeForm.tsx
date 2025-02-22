@@ -77,7 +77,6 @@ export default function EditIncomeForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const updatedIncome = await GirlMathAPI.updateMonthlyIncome(Number(income));
-    console.log("Updated income:", updatedIncome);
     setAppState({ monthlyIncome: updatedIncome, editingIncome: false });
   }
 }

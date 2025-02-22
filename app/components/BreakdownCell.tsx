@@ -16,9 +16,6 @@ export default function BreakdownCell({
 
   const hoverStyling = "md:bg-green-900 cursor-pointer";
 
-  console.log("EDITABLE", editable);
-  console.log("EDITING INCOME", editingIncome);
-
   return (
     <div
       className={`BREAKDOWN-CELL relative flex flex-row justify-between p-2 md:px-0 md:flex-col items-center leading-none md:relative border-green-300 md:py-5 group

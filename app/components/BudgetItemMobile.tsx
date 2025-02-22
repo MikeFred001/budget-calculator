@@ -1,8 +1,6 @@
 import Typography from "./common/Typography";
 import CostInfo from "./common/CostInfo";
-import DateInfo from "./common/DateInfo";
 import Chip from "./common/Chip";
-import Button from "./common/Button";
 import {
   calculateMonthly,
   capitalize,

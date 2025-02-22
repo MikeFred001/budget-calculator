@@ -89,9 +89,3 @@ interface IBudgetItem {
   freq: string;
   startDate: string;
 }
-
-interface IDebtItem {
-  id: number;
-  name: string;
-  amount: number;
-}

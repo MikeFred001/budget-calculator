@@ -109,8 +109,3 @@ interface IFormData {
   name: string;
   amount: string;
 }
-
-interface IDebtItem {
-  name: string;
-  amount: number;
-}
