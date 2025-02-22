@@ -64,7 +64,7 @@ export default function Home() {
 
     let monthlyTotalInCents: number = 0;
 
-    for (let item of budgetItems) {
+    for (const item of budgetItems) {
       const costInCents = Math.round(item.cost * 100);
       const monthlyCostInCents = Math.round(
         costInCents / freqMapping[item.freq]
