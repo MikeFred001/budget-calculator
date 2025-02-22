@@ -58,7 +58,7 @@ export default function AddDebtItemForm() {
 
   async function addDebtItem(newItem: IFormData) {
     const entries = Object.values(newItem);
-    for (let entry of entries) {
+    for (const entry of entries) {
       if (entry === "") {
         alert("Fill out all the fields, idiot.");
         return;

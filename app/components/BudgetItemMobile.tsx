@@ -4,7 +4,6 @@ import Chip from "./common/Chip";
 import {
   calculateMonthly,
   capitalize,
-  formatDateUS,
   getNextPaymentDateUS,
 } from "@/utils/helpers";
 

@@ -20,7 +20,7 @@ export default function DebtItemList({ items, className }: IDebtItemListProps) {
   function calculateDebtTotal(debtItems: IDebtItem[]): number {
     let totalInCents: number = 0;
 
-    for (let item of debtItems) {
+    for (const item of debtItems) {
       const amountInCents = Math.round(item.amount * 100);
       totalInCents += Math.floor(amountInCents);
     }
