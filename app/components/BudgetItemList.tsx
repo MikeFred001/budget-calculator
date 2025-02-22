@@ -21,7 +21,6 @@ export default function BudgetItemList({
     <div
       className={`BUDGET-ITEM-LIST flex flex-col border
         ${groupFreq ? `${groupFreq}-outline` : "Default-outline"}
-        ${items.length < 1 ? "hidden" : ""}
       `}
     >
       <PanelHeader
@@ -33,24 +32,28 @@ export default function BudgetItemList({
       />
 
       {/* Desktop */}
-      <div className={`${collapsed ? "md:hidden" : ""} md:block hidden`}>
-        {addingBudgetItem === groupFreq && (
-          <AddBudgetItemForm groupFreq={groupFreq} />
-        )}
-        {sortedItems.map((item, i) => (
-          <BudgetItem key={i} item={item} />
-        ))}
-      </div>
+      {items.length > 0 && (
+        <div className={`${collapsed ? "md:hidden" : ""} md:block hidden`}>
+          {addingBudgetItem === groupFreq && (
+            <AddBudgetItemForm groupFreq={groupFreq} />
+          )}
+          {sortedItems.map((item, i) => (
+            <BudgetItem key={i} item={item} />
+          ))}
+        </div>
+      )}
 
       {/* Mobile */}
-      <div className={`${collapsed ? "hidden" : ""} md:hidden block`}>
-        {addingBudgetItem === groupFreq && (
-          <AddBudgetItemForm groupFreq={groupFreq} />
-        )}
-        {sortedItems.map((item, i) => (
-          <BudgetItemMobile key={i} item={item} />
-        ))}
-      </div>
+      {items.length > 0 && (
+        <div className={`${collapsed ? "hidden" : ""} md:hidden block`}>
+          {addingBudgetItem === groupFreq && (
+            <AddBudgetItemForm groupFreq={groupFreq} />
+          )}
+          {sortedItems.map((item, i) => (
+            <BudgetItemMobile key={i} item={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

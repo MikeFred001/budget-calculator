@@ -62,12 +62,12 @@ export default function AddBudgetItemForm({
           className="hidden md:flex"
         />
       )}
-      <div className="flex gap-1 justify-center">
+      <div className="flex gap-1 h-[50px] justify-center">
         {!groupFreq && (
           <FrequencyInput
             selected={formData.freq}
             onClick={handleOptionClick}
-            className="md:hidden flex h-[50px] flex-grow"
+            className="md:hidden flex flex-grow"
           />
         )}
         <Button
@@ -80,7 +80,7 @@ export default function AddBudgetItemForm({
         </Button>
         <Button
           onClick={() => setAppState({ addingBudgetItem: "" })}
-          className={`w-[52px] font-arial font-bold ${formData.freq}-hover hover:text-black active:bg-white active:border-white active:text-black ${formData.freq}-outline`}
+          className={`w-[52px] font-arial font-bold ${formData.freq}-hover md:hover:text-black active:bg-white active:border-white active:text-black ${formData.freq}-outline`}
         >
           <FontAwesomeIcon icon={faBan} />
         </Button>

@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const BACKEND_PORT = 8080;
-const BASE_URL = `http://localhost:${BACKEND_PORT}/api`;
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://budget-calculator-backend.onrender.com/api"
+    : "http://localhost:8080/api";
 
 interface IBudgetItem {
   name: string;

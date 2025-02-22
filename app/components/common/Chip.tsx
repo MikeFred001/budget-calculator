@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Chip({ freq, cost, className, onClick }: IChipProps) {
   const freqStyling = {
-    BiWeekly: "hover:bg-blue-400",
-    Monthly: "hover:bg-green-400",
-    Yearly: "hover:bg-red-400",
+    BiWeekly: "md:hover:bg-blue-400",
+    Monthly: "md:hover:bg-green-400",
+    Yearly: "md:hover:bg-red-400",
   };
 
   return (
@@ -15,12 +15,12 @@ export default function Chip({ freq, cost, className, onClick }: IChipProps) {
       onClick={onClick}
     >
       {/* Desktop */}
-      <Typography className="hidden md:block group-hover:hidden">
+      <Typography className="hidden md:block md:group-hover:hidden">
         {freq}
       </Typography>
 
       {/* Mobile */}
-      <Typography className="md:hidden block group-hover:hidden active:text-black active:bg-white active:border-white">
+      <Typography className="md:hidden block md:group-hover:hidden active:text-black active:bg-white active:border-white">
         {freq[0]}
         <FontAwesomeIcon
           icon={faTrashCan}
@@ -29,11 +29,11 @@ export default function Chip({ freq, cost, className, onClick }: IChipProps) {
       </Typography>
       <Typography
         currency
-        className="hidden md:block text-[.8rem] group-hover:hidden"
+        className="hidden md:block text-[.8rem] md:group-hover:hidden"
       >
         {cost}
       </Typography>
-      <Typography className="hidden group-hover:block group-hover:text-black text-[1.4rem]">
+      <Typography className="hidden md:group-hover:block md:group-hover:text-black text-[1.4rem]">
         <FontAwesomeIcon icon={faTrashCan} />
       </Typography>
     </div>

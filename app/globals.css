@@ -45,19 +45,19 @@ body {
 }
 
 .BiWeekly-hover {
-  @apply hover:bg-blue-500 hover:text-black;
+  @apply md:hover:bg-blue-500 md:hover:text-black;
 }
 
 .Monthly-hover {
-  @apply hover:bg-green-500 hover:text-black;
+  @apply md:hover:bg-green-500 md:hover:text-black;
 }
 
 .Yearly-hover {
-  @apply hover:bg-red-500 hover:text-black;
+  @apply md:hover:bg-red-500 md:hover:text-black;
 }
 
 .Default-hover {
-  @apply hover:bg-green-500 hover:text-black;
+  @apply md:hover:bg-green-500 md:hover:text-black;
 }
 
 .Default-outline {

@@ -47,14 +47,14 @@ export default function EditDebtItemForm({
           className="w-[6rem] flex-grow md:flex-initial md:w-[10rem]"
         />
         <Button
-          className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
+          className={`text-[2rem] w-[52px] font-arial font-bold md:hover:bg-green-300 md:hover:border-green-300 md:hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
           type="submit"
         >
           <FontAwesomeIcon icon={faFloppyDisk} />
         </Button>
         <Button
           onClick={() => setEditingDebtItem(false)}
-          className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
+          className={`text-[2rem] w-[52px] font-arial font-bold md:hover:bg-green-300 md:hover:border-green-300 md:hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
         >
           <FontAwesomeIcon icon={faBan} />
         </Button>

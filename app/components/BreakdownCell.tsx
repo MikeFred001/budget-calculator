@@ -14,7 +14,7 @@ export default function BreakdownCell({
   const [hover, setHover] = useState(false);
   const { editingIncome, setAppState } = useAppStore();
 
-  const hoverStyling = "bg-green-900 cursor-pointer";
+  const hoverStyling = "md:bg-green-900 cursor-pointer";
 
   console.log("EDITABLE", editable);
   console.log("EDITING INCOME", editingIncome);

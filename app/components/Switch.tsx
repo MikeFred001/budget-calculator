@@ -21,7 +21,7 @@ export default function Switch({
         <div className="flex h-full md:h-auto">
           <Button
             onClick={() => app.setAppState({ [state]: false })}
-            className={`flex flex-grow justify-center items-center hover:font-semibold w-[50px] md:w-[125px] ${
+            className={`flex flex-grow justify-center items-center md:hover:font-semibold w-[50px] md:w-[125px] ${
               appStoreSetting
                 ? "Default-outline !border-none"
                 : "Default-filled !border-black"
@@ -31,7 +31,7 @@ export default function Switch({
           </Button>
           <Button
             onClick={() => app.setAppState({ [state]: true })}
-            className={`flex flex-grow justify-center items-center hover:font-semibold w-[50px] md:w-[125px] ${
+            className={`flex flex-grow justify-center items-center md:hover:font-semibold w-[50px] md:w-[125px] ${
               appStoreSetting
                 ? "Default-filled !border-black"
                 : "Default-outline !border-none"

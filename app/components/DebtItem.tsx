@@ -37,14 +37,14 @@ export default function DebtItem({ item, className }: IDebtItemProps) {
       </div>
       <div className="flex justify-self-end">
         <Button
-          className={`size-[45px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
+          className={`size-[45px] font-arial font-bold md:hover:bg-green-300 md:hover:border-green-300 md:hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
           onClick={() => setEditingDebtItem(true)}
         >
           <FontAwesomeIcon icon={faPenToSquare} />
         </Button>
         <Button
           onClick={deleteItem}
-          className={`size-[45px] font-arial font-bold hover:bg-green-300 hover:border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
+          className={`size-[45px] font-arial font-bold md:hover:bg-green-300 md:hover:border-green-300 md:hover:text-black active:bg-white active:border-white ml-1 active:text-black Default-outline`}
         >
           <FontAwesomeIcon icon={faTrashCan} />
         </Button>

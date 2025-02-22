@@ -46,13 +46,13 @@ export default function EditIncomeForm({
         />
         <Button
           onClick={handleSubmit}
-          className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black`}
+          className={`text-[2rem] w-[52px] font-arial font-bold md:hover:bg-green-300 border-green-300 md:hover:text-black active:bg-white active:border-white ml-1 active:text-black`}
         >
           <FontAwesomeIcon icon={faSave} />
         </Button>
         <Button
           onClick={() => setAppState({ editingIncome: false })}
-          className={`text-[2rem] w-[52px] font-arial font-bold hover:bg-green-300 border-green-300 hover:text-black active:bg-white active:border-white ml-1 active:text-black`}
+          className={`text-[2rem] w-[52px] font-arial font-bold md:hover:bg-green-300 border-green-300 md:hover:text-black active:bg-white active:border-white ml-1 active:text-black`}
         >
           <FontAwesomeIcon icon={faBan} />
         </Button>

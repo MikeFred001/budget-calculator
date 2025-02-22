@@ -18,7 +18,7 @@ export default function FrequencyInput({
         <Button
           key={i}
           onClick={() => onClick(option)}
-          className={`hover:font-bold cursor-pointer
+          className={`md:hover:font-bold cursor-pointer
             ${
               selected && selected === option
                 ? `${selected}-filled md:w-[7.5rem] flex-grow`
