@@ -1,7 +1,12 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-localStorage.removeItem("app-storage");
+// ✅ Ensure this only runs in the browser to avoid SSR issues
+const storage =
+  typeof window !== "undefined"
+    ? createJSONStorage(() => localStorage)
+    : undefined;
+
 interface IAppState {
   budgetItems: IBudgetItem[];
   debtItems: IDebtItem[];
@@ -47,21 +52,7 @@ const useAppStore = create<IAppState>()(
     }),
     {
       name: "app-storage",
-      storage:
-        typeof window !== "undefined"
-          ? {
-              getItem: (name) => {
-                const item = localStorage.getItem(name);
-                return item ? JSON.parse(item) : null;
-              },
-              setItem: (name, value) => {
-                localStorage.setItem(name, JSON.stringify(value));
-              },
-              removeItem: (name) => {
-                localStorage.removeItem(name);
-              },
-            }
-          : undefined,
+      storage,
     }
   )
 );
