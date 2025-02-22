@@ -16,7 +16,7 @@ export default function PanelHeader({
     <div
       className={`
         PANEL-HEADER ${groupFreq}-filled ${defaultText === headerText ? "" : `${groupFreq}-hover`}
-        px-2 cursor-pointer flex justify-between items-center md:h-8 h-12
+        px-2 cursor-pointer flex justify-between items-center md:h-8 h-12 active:bg-white active:border-white
       `}
       onMouseEnter={handleHeaderHover}
       onMouseLeave={() => setHeaderText(defaultText)}
