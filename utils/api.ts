@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://budget-calculator-backend.onrender.com/api"
+  process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_API_URL
+    ? process.env.NEXT_PUBLIC_API_URL
     : "http://localhost:8080/api";
 
 interface IBudgetItem {
