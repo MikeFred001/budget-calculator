@@ -32,28 +32,24 @@ export default function BudgetItemList({
       />
 
       {/* Desktop */}
-      {items.length > 0 && (
-        <div className={`${collapsed ? "md:hidden" : ""} md:block hidden`}>
-          {addingBudgetItem === groupFreq && (
-            <AddBudgetItemForm groupFreq={groupFreq} />
-          )}
-          {sortedItems.map((item, i) => (
-            <BudgetItem key={i} item={item} />
-          ))}
-        </div>
-      )}
+      <div className={`${collapsed ? "md:hidden" : ""} md:block hidden`}>
+        {addingBudgetItem === groupFreq && (
+          <AddBudgetItemForm groupFreq={groupFreq} />
+        )}
+        {items.length > 0 &&
+          sortedItems.map((item, i) => <BudgetItem key={i} item={item} />)}
+      </div>
 
       {/* Mobile */}
-      {items.length > 0 && (
-        <div className={`${collapsed ? "hidden" : ""} md:hidden block`}>
-          {addingBudgetItem === groupFreq && (
-            <AddBudgetItemForm groupFreq={groupFreq} />
-          )}
-          {sortedItems.map((item, i) => (
+      <div className={`${collapsed ? "hidden" : ""} md:hidden block`}>
+        {addingBudgetItem === groupFreq && (
+          <AddBudgetItemForm groupFreq={groupFreq} />
+        )}
+        {items.length > 0 &&
+          sortedItems.map((item, i) => (
             <BudgetItemMobile key={i} item={item} />
           ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 }
