@@ -48,7 +48,7 @@ export default function Home() {
   return loading ? (
     <Typography>The matrix has you, Neo.</Typography>
   ) : (
-    <div className="HOME p-2 flex flex-col gap-8 md:p-6">
+    <div className="HOME p-2 flex flex-col gap-8 md:py-6 md:px-10">
       <Header />
       <Breakdown
         monthlyTotal={calculateMonthlyTotal(budgetItems)}
