@@ -1,135 +1,122 @@
-import { addMonths, isAfter, lastDayOfMonth, parseISO } from "date-fns";
+export const frequencies = ["BiWeekly", "Monthly", "Yearly"] as const;
+export type Frequency = (typeof frequencies)[number];
 
-function toCamelCase(obj: any): any {
-  if (Array.isArray(obj)) {
-    return obj.map(toCamelCase); // Recursively convert array items
-  } else if (obj !== null && typeof obj === "object") {
-    return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [
-        key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()), // Convert snake_case to camelCase
-        toCamelCase(value), // Recursively convert nested objects
-      ])
-    );
-  }
-  return obj;
-}
+export const frequencyLabels: Record<Frequency, string> = {
+  BiWeekly: "Every 2 weeks",
+  Monthly: "Monthly",
+  Yearly: "Yearly",
+};
 
-function sortByDay(items: IBudgetItem[]): IBudgetItem[] {
-  const sorted = items.sort((a, b) => {
-    const aDate = new Date(a.startDate);
-    const bDate = new Date(b.startDate);
-
-    return aDate.getDate() - bDate.getDate();
-  });
-
-  return sorted;
-}
-
-function getNextPaymentDate(startDate: string): Date {
-  let paymentDate = parseISO(startDate);
-  const today = new Date().toISOString();
-
-  while (!isAfter(paymentDate, today)) {
-    paymentDate = addMonths(paymentDate, 1);
-
-    if (paymentDate.getDate() !== parseISO(startDate).getDate()) {
-      paymentDate = lastDayOfMonth(paymentDate);
-    }
-  }
-  return paymentDate;
-}
-
-function getNextPaymentDateUS(startDate: string): string {
-  let paymentDate = parseISO(startDate);
-  const today = new Date().toISOString();
-
-  while (!isAfter(paymentDate, today)) {
-    paymentDate = addMonths(paymentDate, 1);
-
-    if (paymentDate.getDate() !== parseISO(startDate).getDate()) {
-      paymentDate = lastDayOfMonth(paymentDate);
-    }
-  }
-
-  return formatDateUS(paymentDate.toISOString());
-}
-
-function formatDateUS(dateISO: string, shortenYear: boolean = false): string {
-  const [year, month, day] = dateISO.split("T")[0].split("-");
-
-  return shortenYear
-    ? `${month}/${day}/${year.slice(2)}`
-    : `${month}/${day}/${year}`;
-}
-
-function sortByFullDate(items: IBudgetItem[]): IBudgetItem[] {
-  const sorted = items.sort((a, b) => {
-    const aDate = getNextPaymentDate(a.startDate);
-    const bDate = getNextPaymentDate(b.startDate);
-
-    return aDate.getTime() - bDate.getTime();
-  });
-
-  return sorted;
-}
-
-function calculateMonthly(cost: number, freq: string): number {
-  if (freq === "Monthly") return cost;
-
-  const freqMapping = { BiWeekly: 0.5, Monthly: 1, Yearly: 12 };
-  const monthly = Number(cost) / freqMapping[freq];
-
-  return monthly;
-}
-
-function capitalize(string: string): string {
-  const wordsToIgnore = [
-    "a",
-    "an",
-    "as",
-    "at",
-    "and",
-    "by",
-    "but",
-    "or",
-    "the",
-    "of",
-    "for",
-    "on",
-    "to",
-  ];
-
-  const words = string.split(" ");
-
-  const capitalizedWords = words.map((word, i) => {
-    if (i === 0 || !wordsToIgnore.includes(word)) {
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    } else {
-      return word;
-    }
-  });
-  return capitalizedWords.join(" ");
-}
-
-//--INTERFACES---------------------------------------//
-
-interface IBudgetItem {
-  id: number;
+export interface PaymentInput {
   name: string;
   cost: number;
-  freq: string;
+  freq: Frequency;
   startDate: string;
 }
 
-//--EXPORTS-----------------------------------------//
+export interface Payment extends PaymentInput {
+  id: number;
+}
 
-export {
-  getNextPaymentDate,
-  getNextPaymentDateUS,
-  formatDateUS,
-  calculateMonthly,
-  sortByFullDate,
-  capitalize,
-  toCamelCase,
-  sortByDay,
+export interface DebtInput {
+  name: string;
+  amount: number;
+}
+
+export interface Debt extends DebtInput {
+  id: number;
+}
+
+const usd = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
+const calendarDate = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+export function formatMoney(cents: number): string {
+  return usd.format(cents / 100);
+}
+
+export function toCents(amount: number): number {
+  return Math.round(amount * 100);
+}
+
+export function parseAmount(value: string): number | null {
+  const amount = Number(value);
+  return /^(?:\d+(?:\.\d{0,2})?|\.\d{1,2})$/.test(value) &&
+    amount <= 99_999_999.99
+    ? amount
+    : null;
+}
+
+export function isCalendarDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || value.startsWith("0000")) {
+    return false;
+  }
+
+  const date = new Date(value);
+  return (
+    Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value
+  );
+}
+
+export function todayDate(now = new Date()): string {
+  const parts = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
+  return parts
+    .map((part, index) => String(part).padStart(index === 0 ? 4 : 2, "0"))
+    .join("-");
+}
+
+export function formatCalendarDate(date: string): string {
+  return calendarDate.format(new Date(date));
+}
+
+const paymentsPerYear: Record<Frequency, number> = {
+  BiWeekly: 26,
+  Monthly: 12,
+  Yearly: 1,
 };
+
+export function monthlyCents(cost: number, frequency: Frequency): number {
+  return Math.round((toCents(cost) * paymentsPerYear[frequency]) / 12);
+}
+
+const twoWeeks = 14 * 24 * 60 * 60 * 1000;
+
+export function nextPaymentDate(
+  payment: Pick<Payment, "startDate" | "freq">,
+  today: string,
+): string {
+  const start = payment.startDate.slice(0, 10);
+  if (start >= today) return start;
+
+  if (payment.freq === "BiWeekly") {
+    const startTime = Date.parse(start);
+    const periods = Math.ceil((Date.parse(today) - startTime) / twoWeeks);
+    return new Date(startTime + periods * twoWeeks).toISOString().slice(0, 10);
+  }
+
+  const [startYear, startMonth, startDay] = start.split("-").map(Number);
+  const [year, month] = today.split("-").map(Number);
+  const interval = payment.freq === "Yearly" ? 12 : 1;
+  const elapsedMonths = (year - startYear) * 12 + month - startMonth;
+  const periods = Math.floor(elapsedMonths / interval);
+
+  function occurrence(period: number) {
+    // Recalculate from the original day so February never shifts later payments.
+    const date = new Date(0);
+    const monthIndex = startMonth - 1 + period * interval;
+    date.setUTCFullYear(startYear, monthIndex + 1, 0);
+    date.setUTCDate(Math.min(startDay, date.getUTCDate()));
+    return date.toISOString().split("T")[0];
+  }
+
+  const candidate = occurrence(periods);
+  return candidate >= today ? candidate : occurrence(periods + 1);
+}

@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Neon Finance
 
-## Getting Started
+Try a budget dashboard with sample recurring payments, monthly income, and debt.
+Edits and view preferences stay in memory and reset when you refresh.
 
-First, run the development server:
+## Run locally
 
-```bash
+Use Node.js 22.18 or later, then run:
+
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. The demo runs entirely in the browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How the budget works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Monthly recurring costs use 26 payments a year for biweekly bills, 12 for monthly bills, and one for yearly bills. Each monthly average is rounded to cents before summing so the visible rows add up to the displayed total.
+- Due dates include today. Monthly and yearly schedules use the original start day and temporarily fall back to the last day of shorter months. Biweekly schedules recur every 14 calendar days.
+- Debt balances are displayed separately. Only scheduled payments count toward monthly recurring costs.
 
-## Learn More
+## Verify changes
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sh
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```

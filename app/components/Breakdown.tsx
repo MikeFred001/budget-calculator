@@ -1,53 +1,78 @@
-import BreakdownCell from "./BreakdownCell";
-import EditIncomeForm from "./EditIncomeForm";
-import PanelHeader from "./common/PanelHeader";
-import { useState } from "react";
-
-import useAppStore from "../store/appStore";
+import { useRef, useState } from "react";
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { formatMoney, toCents } from "@/utils/helpers";
+import RecordForm, { Field, readAmount } from "./RecordForm";
 
 export default function Breakdown({
-  monthlyTotal,
-  monthlyIncome,
-}: IBreakdownProps) {
-  const [collapsed, setCollapsed] = useState(false);
-  const { editingIncome } = useAppStore();
-
-  const monthlyRemaining: number = monthlyIncome - monthlyTotal;
+  income,
+  expenses,
+  onIncome,
+}: {
+  income: number;
+  expenses: number;
+  onIncome: (income: number) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const editButton = useRef<HTMLButtonElement>(null);
+  const remaining = toCents(income) - expenses;
 
   return (
-    <div className="BREAKDOWN flex flex-col border Default-outline">
-      <PanelHeader
-        defaultText="Monthly Breakdown"
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-      />
-      <div
-        className={`grid grid-cols-1 text-center border-2 border-green-300 md:grid-cols-3 ${
-          collapsed ? "hidden" : ""
-        } ${monthlyRemaining < 0 ? "text-red-600" : ""}`}
-      >
-        {editingIncome ? (
-          <EditIncomeForm initialAmount={monthlyIncome.toFixed(2)} />
-        ) : (
-          <BreakdownCell
-            title="Income"
-            amount={monthlyIncome}
-            className="border-b md:border-r"
-            editable
+    <section className="overview" aria-labelledby="overview-heading">
+      <h2 id="overview-heading">Monthly overview</h2>
+      <dl className="metrics">
+        <div className="metric">
+          <dt>Income</dt>
+          <dd>
+            <span className="money metric-value">
+              {formatMoney(toCents(income))}
+            </span>
+            <button
+              className="button button-icon metric-edit"
+              type="button"
+              ref={editButton}
+              aria-label="Edit monthly income"
+              aria-expanded={editing}
+              disabled={editing}
+              onClick={() => setEditing(true)}
+            >
+              <FontAwesomeIcon icon={faPenToSquare} aria-hidden="true" />
+            </button>
+          </dd>
+        </div>
+        <div className="metric">
+          <dt>Recurring costs</dt>
+          <dd className="money metric-value">{formatMoney(expenses)}</dd>
+        </div>
+        <div
+          className="metric metric-remaining"
+          data-negative={remaining < 0 ? "" : undefined}
+        >
+          <dt>Remaining after payments</dt>
+          <dd className="money metric-value">{formatMoney(remaining)}</dd>
+        </div>
+      </dl>
+      {editing && (
+        <RecordForm
+          submitLabel="Save income"
+          onClose={() => {
+            setEditing(false);
+            requestAnimationFrame(() => editButton.current?.focus());
+          }}
+          onSave={(fields) => onIncome(readAmount(fields, "income"))}
+        >
+          <Field
+            name="income"
+            label="Monthly income"
+            defaultValue={income.toFixed(2)}
+            decimal
+            autoFocus
           />
-        )}
-        <BreakdownCell
-          title="Total"
-          amount={monthlyTotal}
-          className="border-b md:border-r"
-        />
-        <BreakdownCell title="Remaining" amount={monthlyRemaining} />
-      </div>
-    </div>
+        </RecordForm>
+      )}
+      <p className="overview-note">
+        Recurring costs are averaged over 12 months.
+      </p>
+    </section>
   );
-}
-
-interface IBreakdownProps {
-  monthlyTotal: number;
-  monthlyIncome: number;
 }

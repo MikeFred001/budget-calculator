@@ -1,91 +1,117 @@
 "use client";
 
-import Header from "./components/Header";
+import { useEffect, useState } from "react";
 import Breakdown from "./components/Breakdown";
-import Typography from "./components/common/Typography";
 import BudgetItemPanel from "./components/BudgetItemPanel";
+import type { Preferences } from "./components/BudgetItemPanel";
 import DebtItemPanel from "./components/DebtItemPanel";
-import GirlMathAPI from "@/utils/api";
-import { sortByFullDate, toCamelCase } from "@/utils/helpers";
-import { useEffect } from "react";
-import useAppStore from "./store/appStore";
+import { demoBudget } from "@/utils/demoBudget";
+import { formatCalendarDate, monthlyCents, todayDate } from "@/utils/helpers";
 
 export default function Home() {
-  const { budgetItems, debtItems, monthlyIncome, loading, setAppState } =
-    useAppStore();
+  const [budget, updateBudget] = useState(demoBudget);
+  const [today, setToday] = useState("");
+  const [preferences, setPreferences] = useState<Preferences>({
+    split: false,
+    budgetItemsSorted: true,
+  });
 
   useEffect(() => {
-    async function fetchInitialAppData() {
-      setAppState({ loading: true });
-      try {
-        const budgetItems = toCamelCase(await GirlMathAPI.getAllBudgetItems());
-        const debtItems = toCamelCase(await GirlMathAPI.getAllDebtItems());
-        const appSettings = toCamelCase(await GirlMathAPI.getAppSettings());
-
-        setAppState({
-          budgetItems,
-          debtItems,
-          monthlyIncome: Number(appSettings.monthlyIncome),
-          loading: false,
-        });
-      } catch (err) {
-        console.error("Failed to fetch initial app data:", err);
-        setAppState({
-          budgetItems: [],
-          debtItems: [],
-          monthlyIncome: 0,
-          loading: false,
-        });
-      }
-    }
-    fetchInitialAppData();
+    const updateDate = () => setToday(todayDate());
+    updateDate();
+    const timer = window.setInterval(updateDate, 30_000);
+    window.addEventListener("focus", updateDate);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", updateDate);
+    };
   }, []);
 
-  useEffect(() => {
-    getNearestPaymentDate();
-  }, [budgetItems]);
-
-  return loading ? (
-    <Typography>The matrix has you, Neo.</Typography>
-  ) : (
-    <div className="HOME p-2 flex flex-col gap-8 md:py-6 md:px-10">
-      <Header />
-      <Breakdown
-        monthlyTotal={calculateMonthlyTotal(budgetItems)}
-        monthlyIncome={monthlyIncome}
-      />
-      <BudgetItemPanel budgetItems={budgetItems} />
-      <DebtItemPanel items={debtItems} />
-    </div>
+  const expenses = budget.payments.reduce(
+    (sum, payment) => sum + monthlyCents(payment.cost, payment.freq),
+    0,
   );
 
-  function calculateMonthlyTotal(budgetItems: IBudgetItem[]): number {
-    const freqMapping = { BiWeekly: 0.5, Monthly: 1, Yearly: 12 };
+  return (
+    <main className="dashboard">
+      <header className="dashboard-header">
+        <div className="brand">
+          <span className="brand-mark" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          <div>
+            <h1>Neon Finance</h1>
+            <p>Demo · Changes reset on refresh</p>
+          </div>
+        </div>
+        {today && (
+          <time className="dashboard-date" dateTime={today}>
+            {formatCalendarDate(today)}
+          </time>
+        )}
+      </header>
 
-    let monthlyTotalInCents: number = 0;
-
-    for (const item of budgetItems) {
-      const costInCents = Math.round(item.cost * 100);
-      const monthlyCostInCents = Math.round(
-        costInCents / freqMapping[item.freq]
-      );
-
-      monthlyTotalInCents += Math.ceil(monthlyCostInCents);
-    }
-
-    return monthlyTotalInCents / 100;
-  }
-
-  function getNearestPaymentDate() {
-    const nearestPaymentDate = sortByFullDate([...budgetItems])[0]?.startDate;
-    setAppState({ nearestPaymentDate });
-  }
-}
-
-interface IBudgetItem {
-  id: number;
-  name: string;
-  cost: number;
-  freq: string;
-  startDate: string;
+      {today && (
+        <>
+          <Breakdown
+            income={budget.income}
+            expenses={expenses}
+            onIncome={(income) =>
+              updateBudget((current) => ({ ...current, income }))
+            }
+          />
+          <BudgetItemPanel
+            payments={budget.payments}
+            today={today}
+            preferences={preferences}
+            onPreferences={setPreferences}
+            onAdd={(payment) =>
+              updateBudget((current) => ({
+                ...current,
+                payments: [
+                  ...current.payments,
+                  { ...payment, id: current.nextId },
+                ],
+                nextId: current.nextId + 1,
+              }))
+            }
+            onDelete={(id) =>
+              updateBudget((current) => ({
+                ...current,
+                payments: current.payments.filter(
+                  (payment) => payment.id !== id,
+                ),
+              }))
+            }
+          />
+          <DebtItemPanel
+            debts={budget.debts}
+            onAdd={(debt) =>
+              updateBudget((current) => ({
+                ...current,
+                debts: [...current.debts, { ...debt, id: current.nextId }],
+                nextId: current.nextId + 1,
+              }))
+            }
+            onEdit={(debt) =>
+              updateBudget((current) => ({
+                ...current,
+                debts: current.debts.map((entry) =>
+                  entry.id === debt.id ? debt : entry,
+                ),
+              }))
+            }
+            onDelete={(id) =>
+              updateBudget((current) => ({
+                ...current,
+                debts: current.debts.filter((debt) => debt.id !== id),
+              }))
+            }
+          />
+        </>
+      )}
+    </main>
+  );
 }
