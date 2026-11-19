@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { parseAmount } from "@/utils/helpers";
 
@@ -60,36 +60,57 @@ export default function RecordForm({
 }: {
   children: ReactNode;
   submitLabel: string;
-  onSave: (fields: FormData) => void;
+  onSave: (fields: FormData) => Promise<void>;
   onClose: () => void;
 }) {
+  const submitting = useRef(false);
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting.current) return;
+    const fields = new FormData(event.currentTarget);
+    submitting.current = true;
+    setPending(true);
+    setError("");
     try {
-      onSave(new FormData(event.currentTarget));
+      await onSave(fields);
       onClose();
     } catch (error) {
       setError(
         error instanceof Error ? error.message : "Couldn’t save this change.",
       );
+    } finally {
+      submitting.current = false;
+      setPending(false);
     }
   }
 
   return (
-    <form className="record-form" onSubmit={submit}>
-      <fieldset className="form-fields">{children}</fieldset>
+    <form className="record-form" onSubmit={submit} aria-busy={pending}>
+      <fieldset className="form-fields" disabled={pending}>
+        {children}
+      </fieldset>
       {error && (
         <p className="error-text" role="alert">
           {error}
         </p>
       )}
       <div className="form-actions">
-        <button className="button button-primary" type="submit">
-          {submitLabel}
+        <button
+          className="button button-primary"
+          type="submit"
+          disabled={pending}
+        >
+          {pending ? "Saving…" : submitLabel}
         </button>
-        <button className="button" type="button" onClick={onClose}>
+        <button
+          className="button"
+          type="button"
+          onClick={onClose}
+          disabled={pending}
+        >
           Cancel
         </button>
       </div>

@@ -13,9 +13,9 @@ export default function DebtItemPanel({
   onDelete,
 }: {
   debts: Debt[];
-  onAdd: (debt: DebtInput) => void;
-  onEdit: (debt: Debt) => void;
-  onDelete: (id: number) => void;
+  onAdd: (debt: DebtInput) => Promise<void>;
+  onEdit: (debt: Debt) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
 }) {
   const [adding, setAdding] = useState(false);
   const addButton = useRef<HTMLButtonElement>(null);
@@ -75,10 +75,11 @@ function DebtRow({
   onDelete,
 }: {
   debt: Debt;
-  onEdit: (debt: Debt) => void;
-  onDelete: (id: number) => void;
+  onEdit: (debt: Debt) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
 }) {
   const [editing, setEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const editButton = useRef<HTMLButtonElement>(null);
 
   return (
@@ -102,11 +103,16 @@ function DebtRow({
               type="button"
               ref={editButton}
               aria-label={`Edit ${debt.name}`}
+              disabled={deleting}
               onClick={() => setEditing(true)}
             >
               <FontAwesomeIcon icon={faPenToSquare} aria-hidden="true" />
             </button>
-            <DeleteAction name={debt.name} onDelete={() => onDelete(debt.id)} />
+            <DeleteAction
+              name={debt.name}
+              onDelete={() => onDelete(debt.id)}
+              onPending={setDeleting}
+            />
           </div>
         </div>
       )}
@@ -121,7 +127,7 @@ function DebtForm({
 }: {
   debt?: Debt;
   onClose: () => void;
-  onSave: (debt: DebtInput) => void;
+  onSave: (debt: DebtInput) => Promise<void>;
 }) {
   return (
     <RecordForm
@@ -132,7 +138,7 @@ function DebtForm({
           name: readName(fields),
           amount: readAmount(fields, "amount"),
         };
-        onSave(input);
+        return onSave(input);
       }}
     >
       <Field

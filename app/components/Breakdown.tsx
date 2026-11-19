@@ -11,7 +11,7 @@ export default function Breakdown({
 }: {
   income: number;
   expenses: number;
-  onIncome: (income: number) => void;
+  onIncome: (income: number) => Promise<void>;
 }) {
   const [editing, setEditing] = useState(false);
   const editButton = useRef<HTMLButtonElement>(null);

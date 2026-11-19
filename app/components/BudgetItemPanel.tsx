@@ -30,8 +30,8 @@ export default function BudgetItemPanel({
   today: string;
   preferences: Preferences;
   onPreferences: (value: Preferences) => void;
-  onAdd: (payment: PaymentInput) => void;
-  onDelete: (id: number) => void;
+  onAdd: (payment: PaymentInput) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
 }) {
   const [adding, setAdding] = useState(false);
   const addButton = useRef<HTMLButtonElement>(null);
@@ -132,7 +132,7 @@ export default function BudgetItemPanel({
               throw new Error(
                 "Choose a frequency and a valid first payment date.",
               );
-            onAdd({ name, cost, freq: frequency, startDate });
+            return onAdd({ name, cost, freq: frequency, startDate });
           }}
         >
           <Field name="name" label="Payment name" autoFocus />
@@ -175,7 +175,7 @@ function PaymentGroup({
   rows: { payment: Payment; date: string }[];
   nearest?: string;
   today: string;
-  onDelete: (id: number) => void;
+  onDelete: (id: number) => Promise<void>;
 }) {
   return (
     <div className="payment-group" data-frequency={frequency ?? undefined}>

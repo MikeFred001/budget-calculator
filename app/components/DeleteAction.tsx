@@ -5,15 +5,38 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function DeleteAction({
   name,
   onDelete,
+  onPending,
 }: {
   name: string;
-  onDelete: () => void;
+  onDelete: () => Promise<void>;
+  onPending?: (pending: boolean) => void;
 }) {
   const trigger = useRef<HTMLButtonElement>(null);
   const [confirming, setConfirming] = useState(false);
 
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+
+  async function remove() {
+    if (pending) return;
+    setPending(true);
+    onPending?.(true);
+    setError("");
+    try {
+      await onDelete();
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Couldn’t delete this entry.",
+      );
+    } finally {
+      setPending(false);
+      onPending?.(false);
+    }
+  }
+
   function closeConfirmation() {
     setConfirming(false);
+    setError("");
     trigger.current?.focus();
   }
 
@@ -21,7 +44,7 @@ export default function DeleteAction({
     <div
       className="delete-action"
       onKeyDown={(event) => {
-        if (event.key === "Escape" && confirming) {
+        if (event.key === "Escape" && confirming && !pending) {
           closeConfirmation();
         }
       }}
@@ -32,7 +55,8 @@ export default function DeleteAction({
         ref={trigger}
         aria-label={`Delete ${name}`}
         aria-expanded={confirming}
-        onClick={() => setConfirming(!confirming)}
+        onClick={() => (confirming ? closeConfirmation() : setConfirming(true))}
+        disabled={pending}
       >
         <FontAwesomeIcon icon={faTrashCan} aria-hidden="true" />
       </button>
@@ -49,17 +73,24 @@ export default function DeleteAction({
               type="button"
               autoFocus
               onClick={closeConfirmation}
+              disabled={pending}
             >
               Keep
             </button>
             <button
               className="button button-danger"
               type="button"
-              onClick={onDelete}
+              onClick={remove}
+              disabled={pending}
             >
-              Delete
+              {pending ? "Deleting…" : "Delete"}
             </button>
           </div>
+          {error && (
+            <p className="error-text" role="alert">
+              {error}
+            </p>
+          )}
         </div>
       )}
     </div>

@@ -1,18 +1,23 @@
 # Neon Finance
 
-Try a budget dashboard with sample recurring payments, monthly income, and debt.
-Edits and view preferences stay in memory and reset when you refresh.
+Track recurring payments, monthly income, and debt. Financial records are saved
+by the budget API and reloaded when you refresh.
 
 ## Run locally
 
-Use Node.js 22.18 or later, then run:
+Use Node.js 22.18 or later. Start the Express API from the separate
+`budget-calculator-server` checkout with its PostgreSQL database configured.
+The frontend uses `http://localhost:8080/api` by default. To use a different API,
+set `NEXT_PUBLIC_API_URL` in `.env.local` before starting development or
+building for production. Include the `/api` prefix and allow the frontend's
+origin in the API's CORS configuration.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open http://localhost:3000. The demo runs entirely in the browser.
+Open http://localhost:3000.
 
 ## How the budget works
 

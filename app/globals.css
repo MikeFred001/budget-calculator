@@ -454,6 +454,17 @@ select {
   color: var(--muted);
 }
 
+.load-state {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.load-state h2 {
+  margin-bottom: var(--space-2);
+}
+
 @media (max-width: 48rem) {
   .payment-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
