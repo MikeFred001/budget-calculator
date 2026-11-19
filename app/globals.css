@@ -1,14 +1,25 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --font-mono: var(--mono);
+}
+
 :root {
   color-scheme: dark;
-  --canvas: #080e0b;
-  --surface: #101a14;
-  --surface-raised: #15221a;
-  --line: #2b4033;
-  --ink: #edf8f0;
-  --muted: #a3b9aa;
-  --accent: #75f5a7;
-  --accent-ink: #092415;
-  --danger: #ffa6a1;
+  --canvas: #100807;
+  --surface: #1d100e;
+  --surface-raised: #2a1613;
+  --line: #4a2a25;
+  --control-line: #8c6257;
+  --ink: #fff3ed;
+  --muted: #cdb4aa;
+  --accent: #f96150;
+  --accent-ink: #290704;
+  --danger: #ffba8c;
   --biweekly: #a3d1fe;
   --yearly: #e2c1fd;
   --frequency: var(--accent);
@@ -24,24 +35,14 @@
   --small: 0.875rem;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 body {
-  margin: 0;
   min-width: 0;
-  color: var(--ink);
-  background-color: var(--canvas);
-  background-image: linear-gradient(#7df5a909 1px, transparent 1px),
-    linear-gradient(90deg, #7df5a909 1px, transparent 1px),
-    radial-gradient(ellipse at 50% 0, #183d2a 0, transparent 42rem);
-  background-size:
-    2.5rem 2.5rem,
-    2.5rem 2.5rem,
-    100% 100%;
+  background-image: radial-gradient(
+    ellipse 65rem 42rem at 50% 0,
+    #45100d 0,
+    var(--canvas) 100%
+  );
+  background-repeat: no-repeat;
   font:
     1rem/1.5 system-ui,
     sans-serif;
@@ -49,12 +50,8 @@ body {
 
 h1,
 h2,
-h3,
-p,
-dl,
-dd,
-ul {
-  margin: 0;
+h3 {
+  font-weight: 700;
 }
 button,
 input,
@@ -69,8 +66,7 @@ button:disabled {
   cursor: default;
 }
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  @apply outline-2 outline-offset-[3px] outline-accent;
 }
 
 .dashboard {
@@ -110,10 +106,10 @@ button:disabled {
   height: 2.75rem;
   padding-bottom: 0.65rem;
   flex: none;
-  border: 1px solid #76f5a56b;
+  border: 1px solid #f961506b;
   border-radius: var(--control-radius);
   color: var(--accent);
-  background: #153725;
+  background: #441611;
 }
 
 .brand-mark i {
@@ -153,12 +149,11 @@ h2 {
   letter-spacing: -0.02em;
 }
 .secondary {
+  @apply text-muted;
   font-size: var(--small);
-  color: var(--muted);
 }
 .money {
-  font-family: var(--mono);
-  font-variant-numeric: tabular-nums;
+  @apply font-mono tabular-nums;
 }
 .overview {
   display: grid;
@@ -197,13 +192,13 @@ h2 {
 }
 .metric-remaining {
   color: var(--accent);
-  background: linear-gradient(115deg, #1a3525, var(--surface));
-  border-color: #3d684d;
+  background: linear-gradient(115deg, #40130f, var(--surface));
+  border-color: #81372e;
 }
 .metric-remaining[data-negative] {
   color: var(--danger);
-  border-color: #80544d;
-  background: linear-gradient(115deg, #34231e, var(--surface));
+  border-color: #905c45;
+  background: linear-gradient(115deg, #3b211a, var(--surface));
 }
 .metric-edit {
   position: absolute;
@@ -235,7 +230,7 @@ h2 {
   flex-wrap: wrap;
   padding: var(--space-3) var(--space-5);
   border-block: 1px solid var(--line);
-  background: #0c1510;
+  background: #180c0a;
 }
 
 .control {
@@ -250,9 +245,9 @@ input,
 select {
   min-height: 2.75rem;
   color: var(--ink);
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line);
   border-radius: var(--control-radius);
-  background: #0b140f;
+  background: #160a08;
   padding: var(--space-2) var(--space-3);
 }
 
@@ -297,12 +292,12 @@ select {
   border-color: var(--muted);
 }
 .button-primary:not(:disabled):hover {
-  background-color: #a3ffc3;
-  border-color: #a3ffc3;
+  background-color: #ff8877;
+  border-color: #ff8877;
 }
 .button-danger:not(:disabled):hover {
-  background-color: #35221f;
-  border-color: #ad766d;
+  background-color: #39231c;
+  border-color: #b4795a;
 }
 .record-form {
   padding: var(--space-4);
@@ -381,7 +376,7 @@ select {
 }
 .payment-row[data-next] {
   box-shadow: inset 3px 0 var(--accent);
-  background-color: #76f5a508;
+  background-color: #f961500d;
 }
 .payment-name,
 .payment-due,
@@ -412,7 +407,7 @@ select {
 }
 .due-status {
   color: var(--accent);
-  background: #1b3827;
+  background: #451711;
 }
 .mobile-label {
   position: absolute;
